@@ -53,12 +53,12 @@ app.post('/dv/commonhighdv', (req, res, next) => {
 app.post('/candlestick', (req, res, next) => {
   console.log('Inside candlestick-' + req.body.candlestickdate)
   if(req.body.candlestick === 'bullish') {
-    new Bullish(databaseConnection, 'quote-details', res)
+    new Bullish(databaseConnection, 'quote-details', req, res)
   } else if(req.body.candlestick === 'bearish') {
-    new Bearish(databaseConnection, 'quote-details', res)
+    new Bearish(databaseConnection, 'quote-details', req, res)
   } else if(req.body.candlestick === 'star') {
-    new Star(databaseConnection, 'quote-details', res)
+    new Star(databaseConnection, 'quote-details', req, res)
   }
 })
 
-app.listen(process.env.PORT || 3000, () => console.log('App listening'))
+app.listen(process.env.PORT || 3002, () => console.log('App listening'))

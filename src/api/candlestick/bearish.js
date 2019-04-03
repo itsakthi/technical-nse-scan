@@ -1,25 +1,26 @@
 import Utility from '../utility'
 
 export default class Bearish {
-    constructor(databaseConnection, collectionName, res) {
+    constructor(databaseConnection, collectionName, req, res) {
         let gapDown = [], bearishHammer = [], bearishHammerInverted = [], bearishEngulfing = [], morningStar = []
         let utility = new Utility()
+        const reqDate = utility.formatDate(req.body.candlestickdate)
         databaseConnection.collection(collectionName).find().toArray((error, result)=> {
             if (error) return console.log(error)
             for(let index = 0;index < result.length - 1;index++) {
-                let quotesRecordCount = result[index].quoteDBRecord.length
-                let firstdaysOpen   = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteOpenPrice.replace(/,/g, ''))
-                let firstdaysClose  = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteClosePrice.replace(/,/g, ''))
-                let firstdaysHigh   = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteHighPrice.replace(/,/g, ''))
-                let firstdaysLow    = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteLowPrice.replace(/,/g, ''))
-                let seconddaysOpen  = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteOpenPrice.replace(/,/g, ''))
-                let seconddaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteClosePrice.replace(/,/g, ''))
-                let seconddaysHigh  = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteHighPrice.replace(/,/g, ''))
-                let seconddaysLow   = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteLowPrice.replace(/,/g, ''))
-                let thirddaysOpen   = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteOpenPrice.replace(/,/g, ''))
-                let thirddaysClose  = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteClosePrice.replace(/,/g, ''))
-                let thirddaysHigh   = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteHighPrice.replace(/,/g, ''))
-                let thirddaysLow    = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteLowPrice.replace(/,/g, ''))
+                const reqDateIndex = result[index].quoteDBRecord.findIndex(dbRecord => dbRecord.quoteDate == reqDate)
+                let firstdaysOpen   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''))
+                let firstdaysClose  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''))
+                let firstdaysHigh   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''))
+                let firstdaysLow    = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''))
+                let seconddaysOpen  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''))
+                let seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''))
+                let seconddaysHigh  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''))
+                let seconddaysLow   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''))
+                let thirddaysOpen   = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
+                let thirddaysClose  = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''))
+                let thirddaysHigh   = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
+                let thirddaysLow    = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
 
                 if((seconddaysClose > seconddaysOpen) && (thirddaysOpen < seconddaysOpen) && (thirddaysClose < seconddaysOpen) && (thirddaysHigh < seconddaysLow)) {
                     gapDown.push(result[index].stockCode)

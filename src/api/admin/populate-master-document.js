@@ -24,7 +24,7 @@ export default class PopulateMasterDocument {
 					symbolCountResponse += chunk
 				})
 				http_res.on("end", function () {
-					options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?symbol=' + stockList[stockListIndex] +'&segmentLink=3&symbolCount=' + symbolCountResponse.trim() + '&series=ALL&dateRange=3month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
+					options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?symbol=' + stockList[stockListIndex] +'&segmentLink=3&symbolCount=' + symbolCountResponse.trim() + '&series=EQ&dateRange=3month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
 					https.get(options, function (http_res) {
 						let quoteDetailsResponse = ""
 						http_res.on("data", function (chunk) {

@@ -7,8 +7,7 @@
         <link rel="shortcut icon" type="image/png" href="./favicon.ico"/>
     </head>
     <body>
-        V1
-        <a href="#" onclick="showhide('delivery-volume')">Delivery Volume1</a>
+        <a href="#" onclick="showhide('delivery-volume')">Delivery Volume</a>
         <div id="delivery-volume">
             <form action="/dv/abovedeliverypercent" method="POST">
                 <div>
@@ -52,7 +51,7 @@
                     <input type="radio" name="candlestick" value="bullish" checked>Bullish
                     <input type="radio" name="candlestick" value="bearish">Bearish
                     <input type="radio" name="candlestick" value="star">Star
-                    <br>Date(DD-MM): <input type="text" name="candlestickdate">
+                    <br>Date(DD-MM): <input type="date" name="candlestickdate">
                 </div>
                 <br>
                 <div>
@@ -67,7 +66,6 @@
                 <p>SMA crossover(Appilicable for both daily and hourly EOD - max value 49)</p>
                 <div>
                     <input type="radio" name="sma" value="daily" checked>Daily
-                    <input type="radio" name="sma" value="hourly">Hourly
                 </div>
                 <br>
                 <div>
@@ -88,7 +86,6 @@
                 <p>Appilicable for daily EOD - max value 49</p>
                 <div>
                     <input type="radio" name="abovesma" value="daily" checked>Daily
-                    <input type="radio" name="abovesma" value="hourly">Hourly
                 </div>
                 <br>
                 <div>

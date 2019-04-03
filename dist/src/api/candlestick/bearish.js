@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Bearish = function Bearish(databaseConnection, collectionName, res) {
+var Bearish = function Bearish(databaseConnection, collectionName, req, res) {
     _classCallCheck(this, Bearish);
 
     var gapDown = [],
@@ -21,22 +21,25 @@ var Bearish = function Bearish(databaseConnection, collectionName, res) {
         bearishEngulfing = [],
         morningStar = [];
     var utility = new _utility2.default();
+    var reqDate = utility.formatDate(req.body.candlestickdate);
     databaseConnection.collection(collectionName).find().toArray(function (error, result) {
         if (error) return console.log(error);
         for (var index = 0; index < result.length - 1; index++) {
-            var quotesRecordCount = result[index].quoteDBRecord.length;
-            var firstdaysOpen = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteOpenPrice.replace(/,/g, ''));
-            var firstdaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteClosePrice.replace(/,/g, ''));
-            var firstdaysHigh = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteHighPrice.replace(/,/g, ''));
-            var firstdaysLow = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteLowPrice.replace(/,/g, ''));
-            var seconddaysOpen = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteOpenPrice.replace(/,/g, ''));
-            var seconddaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteClosePrice.replace(/,/g, ''));
-            var seconddaysHigh = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteHighPrice.replace(/,/g, ''));
-            var seconddaysLow = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteLowPrice.replace(/,/g, ''));
-            var thirddaysOpen = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteOpenPrice.replace(/,/g, ''));
-            var thirddaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteClosePrice.replace(/,/g, ''));
-            var thirddaysHigh = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteHighPrice.replace(/,/g, ''));
-            var thirddaysLow = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteLowPrice.replace(/,/g, ''));
+            var reqDateIndex = result[index].quoteDBRecord.findIndex(function (dbRecord) {
+                return dbRecord.quoteDate == reqDate;
+            });
+            var firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''));
+            var firstdaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''));
+            var firstdaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''));
+            var firstdaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''));
+            var seconddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''));
+            var seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''));
+            var seconddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''));
+            var seconddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''));
+            var thirddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
+            var thirddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''));
+            var thirddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''));
+            var thirddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''));
 
             if (seconddaysClose > seconddaysOpen && thirddaysOpen < seconddaysOpen && thirddaysClose < seconddaysOpen && thirddaysHigh < seconddaysLow) {
                 gapDown.push(result[index].stockCode);

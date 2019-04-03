@@ -86,14 +86,14 @@ app.post('/dv/commonhighdv', function (req, res, next) {
 app.post('/candlestick', function (req, res, next) {
   console.log('Inside candlestick-' + req.body.candlestickdate);
   if (req.body.candlestick === 'bullish') {
-    new _bullish2.default(databaseConnection, 'quote-details', res);
+    new _bullish2.default(databaseConnection, 'quote-details', req, res);
   } else if (req.body.candlestick === 'bearish') {
-    new _bearish2.default(databaseConnection, 'quote-details', res);
+    new _bearish2.default(databaseConnection, 'quote-details', req, res);
   } else if (req.body.candlestick === 'star') {
-    new _star2.default(databaseConnection, 'quote-details', res);
+    new _star2.default(databaseConnection, 'quote-details', req, res);
   }
 });
 
-app.listen(process.env.PORT || 3001, function () {
+app.listen(process.env.PORT || 3002, function () {
   return console.log('App listening');
 });

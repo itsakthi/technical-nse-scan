@@ -12,11 +12,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Star = function Star(databaseConnection, collectionName, res) {
+var Star = function Star(databaseConnection, collectionName, req, res) {
     _classCallCheck(this, Star);
 
     var star = [];
     var utility = new _utility2.default();
+    var reqDate = utility.formatDate(req.body.candlestickdate);
+
     databaseConnection.collection(collectionName).find().toArray(function (error, result) {
         if (error) return console.log(error);
         for (var index = 0; index < result.length - 1; index++) {

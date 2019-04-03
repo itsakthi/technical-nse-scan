@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Technical Analysis</title>
+        <link rel="shortcut icon" type="image/png" href="./favicon.ico"/>
+    </head>
+    <body>
+        <a href="#" onclick="showhide('delivery-volume')">Delivery Volume</a>
+        <div id="delivery-volume">
+            <form action="/dv/abovedeliverypercent" method="POST">
+                <div>
+                    <label>Average days of DV more than 50%</label>
+                    <input type="text" name="above_volume">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+            <br>
+            <form action="/dv/abovepreviousdv" method="POST">
+                <div>
+                    <label>More than % of previous day(default - 50%)</label>
+                    <input type="text" name="above_dv_prev">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>    
+            <br>
+            <form action="/dv/commonhighdv" method="POST">
+                <div>
+                    <label>Common high delivery percentage between</label>
+                    <input type="date" name="date_from">
+                    <input type="date" name="date_to">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br><br><br>
+        <a href="#" onclick="showhide('candle-stick')">Candle Stick</a>
+        <div id="candle-stick">
+            <form action="/candlestick" method="POST">
+                <div>
+                    <input type="radio" name="candlestick" value="bullish" checked>Bullish
+                    <input type="radio" name="candlestick" value="bearish">Bearish
+                    <input type="radio" name="candlestick" value="star">Star
+                    <br>Date(DD-MM): <input type="text" name="candlestickdate">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br><br><br>
+        <a href="#" onclick="showhide('sma-cross-over')">SMA Cross Over</a>
+        <div id="sma-cross-over">
+            <form action="/smacrossoverlist" method="POST">
+                <p>SMA crossover(Appilicable for both daily and hourly EOD - max value 49)</p>
+                <div>
+                    <input type="radio" name="sma" value="daily" checked>Daily
+                    <input type="radio" name="sma" value="hourly">Hourly
+                </div>
+                <br>
+                <div>
+                    <label>Simple Moving Average -1</label>
+                    <input type="text" name="first_moving_average">
+                </div>
+                <div>
+                    <label>Simple Moving Average -2</label>
+                    <input type="text" name="second_moving_average">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+            <br>
+            <form action="/abovesma" method="POST">
+                <p>Appilicable for daily EOD - max value 49</p>
+                <div>
+                    <input type="radio" name="abovesma" value="daily" checked>Daily
+                    <input type="radio" name="abovesma" value="hourly">Hourly
+                </div>
+                <br>
+                <div>
+                    <label>Above Simple Moving Average</label>
+                    <input type="text" name="moving_average">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br><br><br>
+        <a href="#" onclick="showhide('volume')">Volume</a>
+        <div id="volume">
+            <form action="/abovevolume" method="POST">
+                <p>Appilicable for daily EOD - max value 49</p>
+                <br>
+                <div>
+                    <label>Above Volume</label>
+                    <input type="text" name="above_volume">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <script>
+        document.getElementById('delivery-volume').style.display = 'none'
+        document.getElementById('candle-stick').style.display = 'none'
+        document.getElementById('sma-cross-over').style.display = 'none'
+        document.getElementById('volume').style.display = 'none'
+        function showhide(moduleName) {
+            var section = document.getElementById(moduleName)
+            if (section.style.display === "none") {
+                section.style.display = "block"
+            } else {
+                section.style.display = "none"
+            }
+        }
+        </script>
+    </body>
+</html>

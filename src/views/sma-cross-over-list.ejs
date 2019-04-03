@@ -1,0 +1,6 @@
+<div style="display:inline-grid;width:25%">
+  <p>list</p>
+  <% for(var i=0; i<stockListCode.length; i++) {%>
+    <p><a target="_blank" href=<%= "https://chartink.com/stocks/" + stockListCode[i] + ".html" %>><%= stockListCode[i] %></a></p>
+  <% } %>
+</div>

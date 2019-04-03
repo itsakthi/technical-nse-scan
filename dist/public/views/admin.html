@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin Page</title>
+        <link rel="shortcut icon" type="image/png" href="../favicon.ico"/>
+    </head>
+    <body>/admin/populate-master-document
+        <form action="/admin/updatedvdocument" method="POST">
+            <div>Update Delivery Percentage Date: <input type="text" name="date"></div>
+            <br>
+            <div>
+                <button type="submit">Update DElivery Volume Document</button>
+            </div>
+        </form>
+        <br>
+        <form action="/admin/populatemasterdocument" method="POST">
+            <div><input type="text" name="quotesfrom"></div>
+            <div><input type="text" name="quotefor"></div>
+            <br>
+            <div>
+                <button type="submit">Poulate Master Document</button>
+            </div>
+        </form>
+    </body>
+</html>

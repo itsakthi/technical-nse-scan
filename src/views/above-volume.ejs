@@ -1,0 +1,12 @@
+<div style="display:inline-grid;width:45%">
+  <p>Above Average Volume Stocks - <%= aboveAverageVolumeStocks.length %></p>
+  <% for(var i=0; i<aboveAverageVolumeStocks.length; i++) {%>
+    <p><a target="_blank" href=<%= "https://chartink.com/stocks/" + aboveAverageVolumeStocks[i] + ".html" %>><%= aboveAverageVolumeStocks[i] %></a></p>
+  <% } %>
+</div>
+<div style="display:inline-grid;width:45%">
+  <p>Above Average Volume Stocks - <%= volumeIncStock.length %></p>
+  <% for(var i=0; i<volumeIncStock.length; i++) {%>
+    <p><a target="_blank" href=<%= "https://chartink.com/stocks/" + volumeIncStock[i] + ".html" %>><%= volumeIncStock[i] %></a></p>
+  <% } %>
+</div>

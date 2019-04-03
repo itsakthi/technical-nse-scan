@@ -22,10 +22,8 @@ export default class Bullish {
                 let thirddaysLow    = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteLowPrice.replace(/,/g, ''))
                 
                 if((seconddaysClose > seconddaysOpen) && (thirddaysOpen > seconddaysClose) && (thirddaysClose > seconddaysClose) && (thirddaysLow > seconddaysHigh)) {
-                    console.log(seconddaysClose+'-'+seconddaysOpen+'-'+thirddaysOpen+'-'+seconddaysClose+'-'+thirddaysClose+'-'+seconddaysClose+'-'+thirddaysLow+'-'+seconddaysHigh)
                     gapUp.push(result[index].stockCode)
                 } else if((thirddaysOpen > seconddaysOpen) && (thirddaysClose > seconddaysOpen) && (thirddaysLow > seconddaysHigh)) {
-                    console.log(thirddaysOpen+'-'+seconddaysOpen+'-'+thirddaysClose+'-'+seconddaysOpen+'-'+thirddaysLow+'-'+seconddaysHigh)
                     gapUp.push(result[index].stockCode) 
                 }
 

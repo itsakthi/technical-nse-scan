@@ -32,7 +32,8 @@ export default class Bullish {
                 isBullishHammer = isBullishHammer && utility.approximateEqual(thirddaysClose, thirddaysHigh)
                 isBullishHammer = isBullishHammer && ((thirddaysClose - thirddaysOpen) * 2) <= (thirddaysOpen - thirddaysLow)
                 
-                let isBullishInvertedHammer = isBullishHammer && utility.approximateEqual(thirddaysOpen, thirddaysLow)
+                let isBullishInvertedHammer = thirddaysClose > thirddaysOpen
+                isBullishInvertedHammer = isBullishInvertedHammer && utility.approximateEqual(thirddaysOpen, thirddaysLow)
                 isBullishInvertedHammer = isBullishInvertedHammer && ((thirddaysClose - thirddaysOpen) * 2) <= (thirddaysHigh - thirddaysClose)
 
                 let isBullishEngulfing = ((seconddaysClose < seconddaysOpen) && (seconddaysOpen > thirddaysOpen) && (seconddaysClose > thirddaysOpen) && (seconddaysOpen < thirddaysClose))

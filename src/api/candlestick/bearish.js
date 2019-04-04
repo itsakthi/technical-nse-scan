@@ -31,10 +31,11 @@ export default class Bearish {
 
                 let isBearishHammer = thirddaysOpen > thirddaysClose
                 isBearishHammer = isBearishHammer && utility.approximateEqual(thirddaysOpen, thirddaysHigh)
-                isBearishHammer = isBearishHammer && (thirddaysOpen - thirddaysClose) <= 2 * (thirddaysClose - thirddaysLow)
+                isBearishHammer = isBearishHammer && ((thirddaysOpen - thirddaysClose) * 2) <= (thirddaysClose - thirddaysLow)
 
-                let isBearishInvertedHammer = isBearishHammer && utility.approximateEqual(thirddaysClose, thirddaysLow)
-                isBearishInvertedHammer = isBearishInvertedHammer && (thirddaysOpen - thirddaysClose) <= 2 * (thirddaysHigh - thirddaysOpen)
+                let isBearishInvertedHammer = thirddaysOpen > thirddaysClose
+                isBearishInvertedHammer = isBearishInvertedHammer && utility.approximateEqual(thirddaysClose, thirddaysLow)
+                isBearishInvertedHammer = isBearishInvertedHammer && ((thirddaysOpen - thirddaysClose) * 2) <= (thirddaysHigh - thirddaysOpen)
 
                 let isBearishEngulfing = ((seconddaysClose > seconddaysOpen) && (seconddaysOpen < thirddaysOpen) && (seconddaysClose < thirddaysOpen) && (seconddaysOpen > thirddaysClose));
         
@@ -43,7 +44,7 @@ export default class Bearish {
                 let dojiExists =  utility.star(seconddaysOpen, seconddaysClose, seconddaysHigh, seconddaysLow)
                 let isSmallBodyExists = ((firstdaysHigh < seconddaysLow) && (firstdaysHigh < seconddaysHigh))
                 let isThirdBearish = thirddaysOpen > thirddaysClose
-                let gapExists = ((seconddaysHigh > firstdaysHigh) && (seconddaysLow > firstdaysHigh) && (thirddaysOpen < seconddaysLow) && (seconddaysClose > thirddaysOpen))
+                let gapExists = (isSmallBodyExists && (thirddaysOpen < seconddaysLow) && (seconddaysClose > thirddaysOpen))
                 let doesCloseBelowFirstMidpoint = thirddaysClose < firstdaysMidpoint
         
                 if (isBearishHammer) {

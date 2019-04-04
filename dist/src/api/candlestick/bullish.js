@@ -28,19 +28,21 @@ var Bullish = function () {
         databaseConnection.collection(collectionName).find().toArray(function (error, result) {
             if (error) return console.log(error);
             for (var index = 0; index < result.length - 1; index++) {
-                var quotesRecordCount = result[index].quoteDBRecord.length;
-                var firstdaysOpen = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteOpenPrice.replace(/,/g, ''));
-                var firstdaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteClosePrice.replace(/,/g, ''));
-                var firstdaysHigh = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteHighPrice.replace(/,/g, ''));
-                var firstdaysLow = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 3].quoteLowPrice.replace(/,/g, ''));
-                var seconddaysOpen = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteOpenPrice.replace(/,/g, ''));
-                var seconddaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteClosePrice.replace(/,/g, ''));
-                var seconddaysHigh = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteHighPrice.replace(/,/g, ''));
-                var seconddaysLow = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 2].quoteLowPrice.replace(/,/g, ''));
-                var thirddaysOpen = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteOpenPrice.replace(/,/g, ''));
-                var thirddaysClose = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteClosePrice.replace(/,/g, ''));
-                var thirddaysHigh = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteHighPrice.replace(/,/g, ''));
-                var thirddaysLow = parseFloat(result[index].quoteDBRecord[quotesRecordCount - 1].quoteLowPrice.replace(/,/g, ''));
+                var reqDateIndex = result[index].quoteDBRecord.findIndex(function (dbRecord) {
+                    return dbRecord.quoteDate == reqDate;
+                });
+                var firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''));
+                var firstdaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''));
+                var firstdaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''));
+                var firstdaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''));
+                var seconddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''));
+                var seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''));
+                var seconddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''));
+                var seconddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''));
+                var thirddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
+                var thirddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''));
+                var thirddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''));
+                var thirddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''));
 
                 if (seconddaysClose > seconddaysOpen && thirddaysOpen > seconddaysClose && thirddaysClose > seconddaysClose && thirddaysLow > seconddaysHigh) {
                     gapUp.push(result[index].stockCode);
@@ -50,10 +52,10 @@ var Bullish = function () {
 
                 var isBullishHammer = thirddaysClose > thirddaysOpen;
                 isBullishHammer = isBullishHammer && utility.approximateEqual(thirddaysClose, thirddaysHigh);
-                isBullishHammer = isBullishHammer && thirddaysClose - thirddaysOpen <= 2 * (thirddaysOpen - thirddaysLow);
+                isBullishHammer = isBullishHammer && (thirddaysClose - thirddaysOpen) * 2 <= thirddaysOpen - thirddaysLow;
 
                 var isBullishInvertedHammer = isBullishHammer && utility.approximateEqual(thirddaysOpen, thirddaysLow);
-                isBullishInvertedHammer = isBullishInvertedHammer && thirddaysClose - thirddaysOpen <= 2 * (thirddaysHigh - thirddaysClose);
+                isBullishInvertedHammer = isBullishInvertedHammer && (thirddaysClose - thirddaysOpen) * 2 <= thirddaysHigh - thirddaysClose;
 
                 var isBullishEngulfing = seconddaysClose < seconddaysOpen && seconddaysOpen > thirddaysOpen && seconddaysClose > thirddaysOpen && seconddaysOpen < thirddaysClose;
 

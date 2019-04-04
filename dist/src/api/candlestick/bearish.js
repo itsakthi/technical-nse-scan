@@ -49,10 +49,11 @@ var Bearish = function Bearish(databaseConnection, collectionName, req, res) {
 
             var isBearishHammer = thirddaysOpen > thirddaysClose;
             isBearishHammer = isBearishHammer && utility.approximateEqual(thirddaysOpen, thirddaysHigh);
-            isBearishHammer = isBearishHammer && thirddaysOpen - thirddaysClose <= 2 * (thirddaysClose - thirddaysLow);
+            isBearishHammer = isBearishHammer && (thirddaysOpen - thirddaysClose) * 2 <= thirddaysClose - thirddaysLow;
 
-            var isBearishInvertedHammer = isBearishHammer && utility.approximateEqual(thirddaysClose, thirddaysLow);
-            isBearishInvertedHammer = isBearishInvertedHammer && thirddaysOpen - thirddaysClose <= 2 * (thirddaysHigh - thirddaysOpen);
+            var isBearishInvertedHammer = thirddaysOpen > thirddaysClose;
+            isBearishInvertedHammer = isBearishInvertedHammer && utility.approximateEqual(thirddaysClose, thirddaysLow);
+            isBearishInvertedHammer = isBearishInvertedHammer && (thirddaysOpen - thirddaysClose) * 2 <= thirddaysHigh - thirddaysOpen;
 
             var isBearishEngulfing = seconddaysClose > seconddaysOpen && seconddaysOpen < thirddaysOpen && seconddaysClose < thirddaysOpen && seconddaysOpen > thirddaysClose;
 

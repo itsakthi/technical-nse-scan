@@ -30,10 +30,10 @@ export default class Bullish {
 
                 let isBullishHammer = thirddaysClose > thirddaysOpen
                 isBullishHammer = isBullishHammer && utility.approximateEqual(thirddaysClose, thirddaysHigh)
-                isBullishHammer = isBullishHammer && (thirddaysClose - thirddaysOpen) <= 2 * (thirddaysOpen - thirddaysLow)
+                isBullishHammer = isBullishHammer && ((thirddaysClose - thirddaysOpen) * 2) <= (thirddaysOpen - thirddaysLow)
                 
                 let isBullishInvertedHammer = isBullishHammer && utility.approximateEqual(thirddaysOpen, thirddaysLow)
-                isBullishInvertedHammer = isBullishInvertedHammer && (thirddaysClose - thirddaysOpen) <= 2 * (thirddaysHigh - thirddaysClose)
+                isBullishInvertedHammer = isBullishInvertedHammer && ((thirddaysClose - thirddaysOpen) * 2) <= (thirddaysHigh - thirddaysClose)
 
                 let isBullishEngulfing = ((seconddaysClose < seconddaysOpen) && (seconddaysOpen > thirddaysOpen) && (seconddaysClose > thirddaysOpen) && (seconddaysOpen < thirddaysClose))
                 
@@ -42,7 +42,7 @@ export default class Bullish {
                 let dojiExists =  utility.star(seconddaysOpen, seconddaysClose, seconddaysHigh, seconddaysLow)
                 let isSmallBodyExists = ((firstdaysLow > seconddaysLow) && (firstdaysLow > seconddaysHigh))
                 let isThirdBullish = thirddaysOpen < thirddaysClose 
-                let gapExists = ((seconddaysHigh < firstdaysLow) && (seconddaysLow < firstdaysLow) && (thirddaysOpen > seconddaysHigh) && (seconddaysClose < thirddaysOpen))
+                let gapExists = (isSmallBodyExists && (thirddaysOpen > seconddaysHigh) && (seconddaysClose < thirddaysOpen))
                 let doesCloseAboveFirstMidpoint = thirddaysClose > firstdaysMidpoint
      
                 if (isBullishHammer) {
@@ -54,7 +54,7 @@ export default class Bullish {
                 if (isBullishEngulfing) {
                     bullishEngulfing.push(result[index].stockCode)
                 }
-                if (isFirstBearish && (isSmallBodyExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
+                if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
                     eveningStar.push(result[index].stockCode)
                 }
             }

@@ -22,7 +22,8 @@ var Bullish = function () {
             bullishHammer = [],
             bullishHammerInverted = [],
             bullishEngulfing = [],
-            eveningStar = [];
+            eveningStar = [],
+            threeWhiteSoldiers = [];
         var utility = new _utility2.default();
         var reqDate = utility.formatDate(req.body.candlestickdate);
         databaseConnection.collection(collectionName).find().toArray(function (error, result) {
@@ -54,7 +55,8 @@ var Bullish = function () {
                 isBullishHammer = isBullishHammer && utility.approximateEqual(thirddaysClose, thirddaysHigh);
                 isBullishHammer = isBullishHammer && (thirddaysClose - thirddaysOpen) * 2 <= thirddaysOpen - thirddaysLow;
 
-                var isBullishInvertedHammer = isBullishHammer && utility.approximateEqual(thirddaysOpen, thirddaysLow);
+                var isBullishInvertedHammer = thirddaysClose > thirddaysOpen;
+                isBullishInvertedHammer = isBullishInvertedHammer && utility.approximateEqual(thirddaysOpen, thirddaysLow);
                 isBullishInvertedHammer = isBullishInvertedHammer && (thirddaysClose - thirddaysOpen) * 2 <= thirddaysHigh - thirddaysClose;
 
                 var isBullishEngulfing = seconddaysClose < seconddaysOpen && seconddaysOpen > thirddaysOpen && seconddaysClose > thirddaysOpen && seconddaysOpen < thirddaysClose;
@@ -64,8 +66,12 @@ var Bullish = function () {
                 var dojiExists = utility.star(seconddaysOpen, seconddaysClose, seconddaysHigh, seconddaysLow);
                 var isSmallBodyExists = firstdaysLow > seconddaysLow && firstdaysLow > seconddaysHigh;
                 var isThirdBullish = thirddaysOpen < thirddaysClose;
-                var gapExists = seconddaysHigh < firstdaysLow && seconddaysLow < firstdaysLow && thirddaysOpen > seconddaysHigh && seconddaysClose < thirddaysOpen;
+                var gapExists = isSmallBodyExists && thirddaysOpen > seconddaysHigh && seconddaysClose < thirddaysOpen;
                 var doesCloseAboveFirstMidpoint = thirddaysClose > firstdaysMidpoint;
+
+                var isUpTrend = seconddaysHigh > firstdaysHigh && thirddaysHigh > seconddaysHigh;
+                var isAllBullish = firstdaysOpen < firstdaysClose && seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose;
+                var doesOpenWithinPreviousBody = firstdaysClose > seconddaysOpen && seconddaysOpen < firstdaysHigh && seconddaysHigh > thirddaysOpen && thirddaysOpen < seconddaysClose;
 
                 if (isBullishHammer) {
                     bullishHammer.push(result[index].stockCode);
@@ -76,8 +82,11 @@ var Bullish = function () {
                 if (isBullishEngulfing) {
                     bullishEngulfing.push(result[index].stockCode);
                 }
-                if (isFirstBearish && (isSmallBodyExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
+                if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
                     eveningStar.push(result[index].stockCode);
+                }
+                if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) {
+                    threeWhiteSoldiers.push(result[index].stockCode);
                 }
             }
             res.render('../src/views/candlestick/bullish.ejs', {
@@ -85,7 +94,8 @@ var Bullish = function () {
                 bullishHammerInverted: bullishHammerInverted,
                 bullishEngulfing: bullishEngulfing,
                 eveningStar: eveningStar,
-                gapUp: gapUp
+                gapUp: gapUp,
+                threeWhiteSoldiers: threeWhiteSoldiers
             });
         });
     }

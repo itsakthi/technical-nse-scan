@@ -61,4 +61,4 @@ app.post('/candlestick', (req, res, next) => {
   }
 })
 
-app.listen(process.env.PORT || 3002, () => console.log('App listening'))
+app.listen(process.env.PORT || 3000, () => console.log('App listening'))

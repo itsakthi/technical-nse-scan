@@ -2,7 +2,7 @@ import Utility from '../utility'
 
 export default class Bearish {
     constructor(databaseConnection, collectionName, req, res) {
-        let gapDown = [], bearishHammer = [], bearishHammerInverted = [], bearishEngulfing = [], morningStar = []
+        let gapDown = [], bearishHammer = [], bearishHammerInverted = [], bearishEngulfing = [], morningStar = [], threeBlackCrows = []
         let utility = new Utility()
         const reqDate = utility.formatDate(req.body.candlestickdate)
         databaseConnection.collection(collectionName).find().toArray((error, result)=> {
@@ -47,6 +47,10 @@ export default class Bearish {
                 let gapExists = (isSmallBodyExists && (thirddaysOpen < seconddaysLow) && (seconddaysClose > thirddaysOpen))
                 let doesCloseBelowFirstMidpoint = thirddaysClose < firstdaysMidpoint
         
+                let isDownTrend = firstdaysLow > seconddaysLow && seconddaysLow > thirddaysLow
+                let isAllBearish = firstdaysOpen > firstdaysClose && seconddaysOpen > seconddaysClose && thirddaysOpen > thirddaysClose                                      
+                let doesOpenWithinPreviousBody = firstdaysOpen > seconddaysOpen && seconddaysOpen > firstdaysClose && seconddaysOpen > thirddaysOpen  && thirddaysOpen > seconddaysClose
+      
                 if (isBearishHammer) {
                     bearishHammer.push(result[index].stockCode)
                 }
@@ -59,13 +63,17 @@ export default class Bearish {
                 if (isFirstBullish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBearish && doesCloseBelowFirstMidpoint) {
                     morningStar.push(result[index].stockCode)
                 }
+                if (isDownTrend && isAllBearish && doesOpenWithinPreviousBody) {
+                    threeBlackCrows.push(result[index].stockCode)
+                }
             }
             res.render('../src/views/candlestick/bearish.ejs', {
                 bearishHammer,
                 bearishHammerInverted,
                 bearishEngulfing,
                 gapDown,
-                morningStar
+                morningStar,
+                threeBlackCrows
             })
         })
     }

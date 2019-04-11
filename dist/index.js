@@ -94,6 +94,6 @@ app.post('/candlestick', function (req, res, next) {
   }
 });
 
-app.listen(process.env.PORT || 3002, function () {
+app.listen(process.env.PORT || 3000, function () {
   return console.log('App listening');
 });

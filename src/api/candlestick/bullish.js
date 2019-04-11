@@ -2,7 +2,7 @@ import Utility from '../utility'
 
 export default class Bullish {
     constructor(databaseConnection, collectionName, req, res) {
-        let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = []
+        let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = [], threeWhiteSoldiers = []
         let utility = new Utility()
         const reqDate = utility.formatDate(req.body.candlestickdate)
         databaseConnection.collection(collectionName).find().toArray((error, result)=> {
@@ -46,6 +46,10 @@ export default class Bullish {
                 let gapExists = (isSmallBodyExists && (thirddaysOpen > seconddaysHigh) && (seconddaysClose < thirddaysOpen))
                 let doesCloseAboveFirstMidpoint = thirddaysClose > firstdaysMidpoint
      
+                let isUpTrend = seconddaysHigh > firstdaysHigh && thirddaysHigh > seconddaysHigh
+                let isAllBullish = firstdaysOpen < firstdaysClose && seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose                      
+                let doesOpenWithinPreviousBody = firstdaysClose > seconddaysOpen && seconddaysOpen <  firstdaysHigh && seconddaysHigh > thirddaysOpen  && thirddaysOpen < seconddaysClose
+
                 if (isBullishHammer) {
                     bullishHammer.push(result[index].stockCode)
                 }
@@ -58,13 +62,17 @@ export default class Bullish {
                 if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
                     eveningStar.push(result[index].stockCode)
                 }
+                if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) {
+                    threeWhiteSoldiers.push(result[index].stockCode)
+                }
             }
             res.render('../src/views/candlestick/bullish.ejs', {
                 bullishHammer,
                 bullishHammerInverted,
                 bullishEngulfing,
                 eveningStar,
-                gapUp
+                gapUp,
+                threeWhiteSoldiers
             })
         })
     }

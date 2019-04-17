@@ -60,5 +60,4 @@ app.post('/candlestick', (req, res, next) => {
     new Star(databaseConnection, 'quote-details', req, res)
   }
 })
-
 app.listen(process.env.PORT || 3000, () => console.log('App listening'))

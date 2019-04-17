@@ -5,23 +5,63 @@ export default class Bullish {
         let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = [], threeWhiteSoldiers = []
         let utility = new Utility()
         const reqDate = utility.formatDate(req.body.candlestickdate)
+        const range = req.body.candlestickrange
         databaseConnection.collection(collectionName).find().toArray((error, result)=> {
             if (error) return console.log(error)
             for(let index = 0;index < result.length - 1;index++) {
-                const reqDateIndex = result[index].quoteDBRecord.findIndex(dbRecord => dbRecord.quoteDate == reqDate)
-                let firstdaysOpen   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''))
-                let firstdaysClose  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''))
-                let firstdaysHigh   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''))
-                let firstdaysLow    = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''))
-                let seconddaysOpen  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''))
-                let seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''))
-                let seconddaysHigh  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''))
-                let seconddaysLow   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''))
-                let thirddaysOpen   = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
-                let thirddaysClose  = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''))
-                let thirddaysHigh   = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
-                let thirddaysLow    = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
-
+                let firstdaysOpen = 0, firstdaysClose = 0, firstdaysHigh = 0, firstdaysLow = 0, seconddaysOpen = 0, seconddaysClose = 0,
+                    seconddaysHigh = 0, seconddaysLow = 0, thirddaysOpen = 0, thirddaysClose = 0, thirddaysHigh = 0, thirddaysLow = 0
+                if(range === 'daily') {
+                    const reqDateIndex = result[index].quoteDBRecord.findIndex(dbRecord => dbRecord.quoteDate == reqDate)
+                    firstdaysOpen   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''))
+                    firstdaysClose  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''))
+                    firstdaysHigh   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''))
+                    firstdaysLow    = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''))
+                    seconddaysOpen  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''))
+                    seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''))
+                    seconddaysHigh  = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''))
+                    seconddaysLow   = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''))
+                    thirddaysOpen   = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
+                    thirddaysClose  = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''))
+                    thirddaysHigh   = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
+                    thirddaysLow    = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
+                }
+                else if(range === 'weekly') {
+                    let currentDate = reqDate
+                    for(let weekCount = 1; weekCount < 4; weekCount++) {
+                        let tempHigh = 0, tempLow = 0
+                        for(let dayCount = 1; dayCount < 6; dayCount++) {
+                            let reqDateIndex = result[index].quoteDBRecord.findIndex(dbRecord => dbRecord.quoteDate == currentDate)
+                            if(reqDateIndex > 0) {
+                                if(weekCount === 1) {
+                                    if(!thirddaysClose) { thirddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, '')) }
+                                    tempHigh = tempHigh > parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, '')) ? tempHigh : parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
+                                    thirddaysHigh = tempHigh
+                                    thirddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, '')) < tempLow ? parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, '')) : tempLow
+                                    tempLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
+                                    thirddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
+                                } else if(weekCount === 2) {
+                                    if(!seconddaysClose) { seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, '')) }
+                                    tempHigh = tempHigh > parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, '')) ? tempHigh : parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
+                                    seconddaysHigh = tempHigh
+                                    seconddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, '')) < tempLow ? parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, '')) : tempLow
+                                    tempLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
+                                    seconddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
+                                } else if(weekCount === 3) {
+                                    if(!firstdaysClose) { firstdaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, '')) }
+                                    tempHigh = tempHigh > parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, '')) ? tempHigh : parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
+                                    firstdaysHigh = tempHigh
+                                    firstdaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, '')) < tempLow ? parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, '')) : tempLow
+                                    tempLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
+                                    firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
+                                }
+                            }
+                            currentDate = this.decrementDate(currentDate, 1)
+                        }
+                        currentDate = this.decrementDate(currentDate, 2)
+                    }
+                    console.log(thirddaysClose+'-'+thirddaysHigh+'-'+thirddaysLow+'-'+thirddaysOpen)
+                }
                 if((seconddaysClose > seconddaysOpen) && (thirddaysOpen > seconddaysClose) && (thirddaysClose > seconddaysClose) && (thirddaysLow > seconddaysHigh)) {
                     gapUp.push(result[index].stockCode)
                 } else if((thirddaysOpen > seconddaysOpen) && (thirddaysClose > seconddaysOpen) && (thirddaysLow > seconddaysHigh)) {
@@ -84,5 +124,13 @@ export default class Bullish {
         // Downward trend, so more losses than gains
         return losses > gains;
     }
-
+    decrementDate (currentDate, decrementBy) {
+        let utility = new Utility()
+        const formattedCurrentDate = new Date(currentDate)
+        formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy)
+        let validDate = formattedCurrentDate.getFullYear() + '-'
+        validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1)
+        validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate())
+        return utility.formatDate(validDate)
+    }
 }

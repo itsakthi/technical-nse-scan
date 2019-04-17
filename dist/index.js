@@ -93,7 +93,6 @@ app.post('/candlestick', function (req, res, next) {
     new _star2.default(databaseConnection, 'quote-details', req, res);
   }
 });
-
 app.listen(process.env.PORT || 3000, function () {
   return console.log('App listening');
 });

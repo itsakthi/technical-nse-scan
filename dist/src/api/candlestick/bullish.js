@@ -16,6 +16,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Bullish = function () {
     function Bullish(databaseConnection, collectionName, req, res) {
+        var _this = this;
+
         _classCallCheck(this, Bullish);
 
         var gapUp = [],
@@ -26,25 +28,85 @@ var Bullish = function () {
             threeWhiteSoldiers = [];
         var utility = new _utility2.default();
         var reqDate = utility.formatDate(req.body.candlestickdate);
+        var range = req.body.candlestickrange;
         databaseConnection.collection(collectionName).find().toArray(function (error, result) {
             if (error) return console.log(error);
             for (var index = 0; index < result.length - 1; index++) {
-                var reqDateIndex = result[index].quoteDBRecord.findIndex(function (dbRecord) {
-                    return dbRecord.quoteDate == reqDate;
-                });
-                var firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''));
-                var firstdaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''));
-                var firstdaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''));
-                var firstdaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''));
-                var seconddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''));
-                var seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''));
-                var seconddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''));
-                var seconddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''));
-                var thirddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
-                var thirddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''));
-                var thirddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''));
-                var thirddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''));
-
+                var firstdaysOpen = 0,
+                    firstdaysClose = 0,
+                    firstdaysHigh = 0,
+                    firstdaysLow = 0,
+                    seconddaysOpen = 0,
+                    seconddaysClose = 0,
+                    seconddaysHigh = 0,
+                    seconddaysLow = 0,
+                    thirddaysOpen = 0,
+                    thirddaysClose = 0,
+                    thirddaysHigh = 0,
+                    thirddaysLow = 0;
+                if (range === 'daily') {
+                    var reqDateIndex = result[index].quoteDBRecord.findIndex(function (dbRecord) {
+                        return dbRecord.quoteDate == reqDate;
+                    });
+                    firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteOpenPrice.replace(/,/g, ''));
+                    firstdaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteClosePrice.replace(/,/g, ''));
+                    firstdaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteHighPrice.replace(/,/g, ''));
+                    firstdaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 2].quoteLowPrice.replace(/,/g, ''));
+                    seconddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteOpenPrice.replace(/,/g, ''));
+                    seconddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteClosePrice.replace(/,/g, ''));
+                    seconddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteHighPrice.replace(/,/g, ''));
+                    seconddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex - 1].quoteLowPrice.replace(/,/g, ''));
+                    thirddaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
+                    thirddaysClose = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteClosePrice.replace(/,/g, ''));
+                    thirddaysHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''));
+                    thirddaysLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''));
+                } else if (range === 'weekly') {
+                    (function () {
+                        var currentDate = reqDate;
+                        for (var weekCount = 1; weekCount < 4; weekCount++) {
+                            var tempHigh = 0,
+                                tempLow = 0;
+                            for (var dayCount = 1; dayCount < 6; dayCount++) {
+                                var _reqDateIndex = result[index].quoteDBRecord.findIndex(function (dbRecord) {
+                                    return dbRecord.quoteDate == currentDate;
+                                });
+                                if (_reqDateIndex > 0) {
+                                    if (weekCount === 1) {
+                                        if (!thirddaysClose) {
+                                            thirddaysClose = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteClosePrice.replace(/,/g, ''));
+                                        }
+                                        tempHigh = tempHigh > parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteHighPrice.replace(/,/g, '')) ? tempHigh : parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteHighPrice.replace(/,/g, ''));
+                                        thirddaysHigh = tempHigh;
+                                        thirddaysLow = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, '')) < tempLow ? parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, '')) : tempLow;
+                                        tempLow = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, ''));
+                                        thirddaysOpen = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
+                                    } else if (weekCount === 2) {
+                                        if (!seconddaysClose) {
+                                            seconddaysClose = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteClosePrice.replace(/,/g, ''));
+                                        }
+                                        tempHigh = tempHigh > parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteHighPrice.replace(/,/g, '')) ? tempHigh : parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteHighPrice.replace(/,/g, ''));
+                                        seconddaysHigh = tempHigh;
+                                        seconddaysLow = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, '')) < tempLow ? parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, '')) : tempLow;
+                                        tempLow = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, ''));
+                                        seconddaysOpen = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
+                                    } else if (weekCount === 3) {
+                                        if (!firstdaysClose) {
+                                            firstdaysClose = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteClosePrice.replace(/,/g, ''));
+                                        }
+                                        tempHigh = tempHigh > parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteHighPrice.replace(/,/g, '')) ? tempHigh : parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteHighPrice.replace(/,/g, ''));
+                                        firstdaysHigh = tempHigh;
+                                        firstdaysLow = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, '')) < tempLow ? parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, '')) : tempLow;
+                                        tempLow = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteLowPrice.replace(/,/g, ''));
+                                        firstdaysOpen = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
+                                    }
+                                }
+                                currentDate = _this.decrementDate(currentDate, 1);
+                            }
+                            currentDate = _this.decrementDate(currentDate, 2);
+                        }
+                        console.log(thirddaysClose + '-' + thirddaysHigh + '-' + thirddaysLow + '-' + thirddaysOpen);
+                    })();
+                }
                 if (seconddaysClose > seconddaysOpen && thirddaysOpen > seconddaysClose && thirddaysClose > seconddaysClose && thirddaysLow > seconddaysHigh) {
                     gapUp.push(result[index].stockCode);
                 } else if (thirddaysOpen > seconddaysOpen && thirddaysClose > seconddaysOpen && thirddaysLow > seconddaysHigh) {
@@ -109,6 +171,17 @@ var Bullish = function () {
             var losses = averageloss({ values: data.close.slice(0, end), period: end - 1 });
             // Downward trend, so more losses than gains
             return losses > gains;
+        }
+    }, {
+        key: 'decrementDate',
+        value: function decrementDate(currentDate, decrementBy) {
+            var utility = new _utility2.default();
+            var formattedCurrentDate = new Date(currentDate);
+            formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy);
+            var validDate = formattedCurrentDate.getFullYear() + '-';
+            validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1);
+            validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate());
+            return utility.formatDate(validDate);
         }
     }]);
 

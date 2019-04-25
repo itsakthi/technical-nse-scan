@@ -17,7 +17,7 @@ var Utility = function () {
         key: 'approximateEqual',
         value: function approximateEqual(a, b) {
             var left = parseFloat(Math.abs(a - b).toPrecision(4)) * 1;
-            var right = parseFloat((a * 0.005).toPrecision(4)) * 1;
+            var right = parseFloat((a * 0.0025).toPrecision(4)) * 1;
             return left <= right;
         }
     }, {

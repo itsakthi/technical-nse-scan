@@ -1,8 +1,7 @@
 import Utility from '../utility'
-
 export default class Bullish {
     constructor(databaseConnection, collectionName, req, res) {
-        let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = [], twoWhiteSoldiers = [], threeWhiteSoldiers = [], shavenUp = []
+        let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = [], twoWhiteSoldiers = [], threeWhiteSoldiers = [], shavenUp = [], piercing = []
         let utility = new Utility()
         const reqDate = utility.formatDate(req.body.candlestickdate)
         const range = req.body.candlestickrange
@@ -67,7 +66,6 @@ export default class Bullish {
                 } else if((thirddaysOpen > seconddaysOpen) && (thirddaysClose > seconddaysOpen) && (thirddaysLow > seconddaysHigh)) {
                     gapUp.push(result[index].stockCode) 
                 }
-
                 let isBullishHammer = thirddaysClose > thirddaysOpen
                 isBullishHammer = isBullishHammer && utility.approximateEqual(thirddaysClose, thirddaysHigh)
                 isBullishHammer = isBullishHammer && ((thirddaysClose - thirddaysOpen) * 2) <= (thirddaysOpen - thirddaysLow)
@@ -96,27 +94,23 @@ export default class Bullish {
 
                 let shaven = thirddaysClose > thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysHigh) && utility.approximateEqual(thirddaysOpen, thirddaysLow)
 
-                if (isBullishHammer) {
+                let isPiercing = thirddaysLow < seconddaysLow && seconddaysLow > thirddaysOpen && thirddaysClose > thirddaysOpen
+                if (isBullishHammer)
                     bullishHammer.push(result[index].stockCode)
-                }
-                if (isBullishInvertedHammer) {
+                if (isBullishInvertedHammer)
                     bullishHammerInverted.push(result[index].stockCode)
-                }
-                if (isBullishEngulfing) {
+                if (isBullishEngulfing)
                     bullishEngulfing.push(result[index].stockCode)
-                }
-                if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
+                if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint)
                     eveningStar.push(result[index].stockCode)
-                }
-                if (twoWSIsUpTrend && twoWSIsAllBullish && twoWSDoesOpenWithinPreviousBody) {
+                if (twoWSIsUpTrend && twoWSIsAllBullish && twoWSDoesOpenWithinPreviousBody)
                     twoWhiteSoldiers.push(result[index].stockCode)
-                }
-                if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) {
+                if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody)
                     threeWhiteSoldiers.push(result[index].stockCode)
-                }
-                if (shaven) {
+                if (shaven)
                     shavenUp.push(result[index].stockCode)
-                }
+                if (isPiercing)
+                    piercing.push(result[index].stockCode)
             }
             res.render('../src/views/candlestick/bullish.ejs', {
                 bullishHammer,
@@ -126,16 +120,15 @@ export default class Bullish {
                 gapUp,
                 twoWhiteSoldiers: twoWhiteSoldiers.filter(twoWhiteSoldier => !threeWhiteSoldiers.includes(twoWhiteSoldier)),
                 threeWhiteSoldiers,
-                shavenUp
+                shavenUp,
+                piercing
             })
         })
     }
     downwardTrend (stockData) {
         const end = 4;
-        // Analyze trends in closing prices of the first three or four candlesticks
         let gains = averagegain({ values: data.close.slice(0, end), period: end - 1 });
         let losses = averageloss({ values: data.close.slice(0, end), period: end - 1 });
-        // Downward trend, so more losses than gains
         return losses > gains;
     }
     decrementDate (currentDate, decrementBy) {

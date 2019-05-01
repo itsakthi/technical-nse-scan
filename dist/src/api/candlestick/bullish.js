@@ -27,7 +27,8 @@ var Bullish = function () {
             eveningStar = [],
             twoWhiteSoldiers = [],
             threeWhiteSoldiers = [],
-            shavenUp = [];
+            shavenUp = [],
+            piercing = [];
         var utility = new _utility2.default();
         var reqDate = utility.formatDate(req.body.candlestickdate);
         var range = req.body.candlestickrange;
@@ -114,7 +115,6 @@ var Bullish = function () {
                 } else if (thirddaysOpen > seconddaysOpen && thirddaysClose > seconddaysOpen && thirddaysLow > seconddaysHigh) {
                     gapUp.push(result[index].stockCode);
                 }
-
                 var isBullishHammer = thirddaysClose > thirddaysOpen;
                 isBullishHammer = isBullishHammer && utility.approximateEqual(thirddaysClose, thirddaysHigh);
                 isBullishHammer = isBullishHammer && (thirddaysClose - thirddaysOpen) * 2 <= thirddaysOpen - thirddaysLow;
@@ -135,7 +135,7 @@ var Bullish = function () {
 
                 var twoWSIsUpTrend = thirddaysHigh > seconddaysHigh;
                 var twoWSIsAllBullish = seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose;
-                var twoWSDoesOpenWithinPreviousBody = seconddaysOpen < firstdaysHigh && seconddaysHigh > thirddaysOpen && thirddaysOpen < seconddaysClose;
+                var twoWSDoesOpenWithinPreviousBody = seconddaysHigh > thirddaysOpen && thirddaysOpen < seconddaysClose;
 
                 var isUpTrend = seconddaysHigh > firstdaysHigh && thirddaysHigh > seconddaysHigh;
                 var isAllBullish = firstdaysOpen < firstdaysClose && seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose;
@@ -143,27 +143,15 @@ var Bullish = function () {
 
                 var shaven = thirddaysClose > thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysHigh) && utility.approximateEqual(thirddaysOpen, thirddaysLow);
 
-                if (isBullishHammer) {
-                    bullishHammer.push(result[index].stockCode);
-                }
-                if (isBullishInvertedHammer) {
-                    bullishHammerInverted.push(result[index].stockCode);
-                }
-                if (isBullishEngulfing) {
-                    bullishEngulfing.push(result[index].stockCode);
-                }
-                if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
-                    eveningStar.push(result[index].stockCode);
-                }
-                if (twoWSIsUpTrend && twoWSIsAllBullish && twoWSDoesOpenWithinPreviousBody) {
-                    twoWhiteSoldiers.push(result[index].stockCode);
-                }
-                if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) {
-                    threeWhiteSoldiers.push(result[index].stockCode);
-                }
-                if (shaven) {
-                    shavenUp.push(result[index].stockCode);
-                }
+                var isPiercing = thirddaysLow < seconddaysLow && seconddaysLow > thirddaysOpen && thirddaysClose > thirddaysOpen;
+                if (isBullishHammer) bullishHammer.push(result[index].stockCode);
+                if (isBullishInvertedHammer) bullishHammerInverted.push(result[index].stockCode);
+                if (isBullishEngulfing) bullishEngulfing.push(result[index].stockCode);
+                if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) eveningStar.push(result[index].stockCode);
+                if (twoWSIsUpTrend && twoWSIsAllBullish && twoWSDoesOpenWithinPreviousBody) twoWhiteSoldiers.push(result[index].stockCode);
+                if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) threeWhiteSoldiers.push(result[index].stockCode);
+                if (shaven) shavenUp.push(result[index].stockCode);
+                if (isPiercing) piercing.push(result[index].stockCode);
             }
             res.render('../src/views/candlestick/bullish.ejs', {
                 bullishHammer: bullishHammer,
@@ -175,7 +163,8 @@ var Bullish = function () {
                     return !threeWhiteSoldiers.includes(twoWhiteSoldier);
                 }),
                 threeWhiteSoldiers: threeWhiteSoldiers,
-                shavenUp: shavenUp
+                shavenUp: shavenUp,
+                piercing: piercing
             });
         });
     }
@@ -184,10 +173,8 @@ var Bullish = function () {
         key: 'downwardTrend',
         value: function downwardTrend(stockData) {
             var end = 4;
-            // Analyze trends in closing prices of the first three or four candlesticks
             var gains = averagegain({ values: data.close.slice(0, end), period: end - 1 });
             var losses = averageloss({ values: data.close.slice(0, end), period: end - 1 });
-            // Downward trend, so more losses than gains
             return losses > gains;
         }
     }, {

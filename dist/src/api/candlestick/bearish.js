@@ -27,7 +27,8 @@ var Bearish = function () {
             morningStar = [],
             twoBlackCrows = [],
             threeBlackCrows = [],
-            shavenDown = [];
+            shavenDown = [],
+            darkCloud = [];
         var utility = new _utility2.default();
         var reqDate = utility.formatDate(req.body.candlestickdate);
         var range = req.body.candlestickrange;
@@ -143,27 +144,15 @@ var Bearish = function () {
 
                 var shaven = thirddaysClose < thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysLow) && utility.approximateEqual(thirddaysOpen, thirddaysHigh);
 
-                if (isBearishHammer) {
-                    bearishHammer.push(result[index].stockCode);
-                }
-                if (isBearishInvertedHammer) {
-                    bearishHammerInverted.push(result[index].stockCode);
-                }
-                if (isBearishEngulfing) {
-                    bearishEngulfing.push(result[index].stockCode);
-                }
-                if (isFirstBullish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBearish && doesCloseBelowFirstMidpoint) {
-                    morningStar.push(result[index].stockCode);
-                }
-                if (twoCrowIsDownTrend && twoCrowIsAllBearish && twoCrowDoesOpenWithinPreviousBody) {
-                    twoBlackCrows.push(result[index].stockCode);
-                }
-                if (isDownTrend && isAllBearish && doesOpenWithinPreviousBody) {
-                    threeBlackCrows.push(result[index].stockCode);
-                }
-                if (shaven) {
-                    shavenDown.push(result[index].stockCode);
-                }
+                var isDarkCloud = thirddaysOpen > seconddaysHigh && thirddaysClose > seconddaysOpen && thirddaysClose < seconddaysClose && thirddaysClose < thirddaysOpen;
+                if (isBearishHammer) bearishHammer.push(result[index].stockCode);
+                if (isBearishInvertedHammer) bearishHammerInverted.push(result[index].stockCode);
+                if (isBearishEngulfing) bearishEngulfing.push(result[index].stockCode);
+                if (isFirstBullish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBearish && doesCloseBelowFirstMidpoint) morningStar.push(result[index].stockCode);
+                if (twoCrowIsDownTrend && twoCrowIsAllBearish && twoCrowDoesOpenWithinPreviousBody) twoBlackCrows.push(result[index].stockCode);
+                if (isDownTrend && isAllBearish && doesOpenWithinPreviousBody) threeBlackCrows.push(result[index].stockCode);
+                if (shaven) shavenDown.push(result[index].stockCode);
+                if (isDarkCloud) darkCloud.push(result[index].stockCode);
             }
             res.render('../src/views/candlestick/bearish.ejs', {
                 bearishHammer: bearishHammer,
@@ -175,7 +164,8 @@ var Bearish = function () {
                     return !threeBlackCrows.includes(twoBlackCrow);
                 }),
                 threeBlackCrows: threeBlackCrows,
-                shavenDown: shavenDown
+                shavenDown: shavenDown,
+                darkCloud: darkCloud
             });
         });
     }

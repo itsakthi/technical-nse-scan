@@ -25,7 +25,9 @@ var Bearish = function () {
             bearishHammerInverted = [],
             bearishEngulfing = [],
             morningStar = [],
-            threeBlackCrows = [];
+            twoBlackCrows = [],
+            threeBlackCrows = [],
+            shavenDown = [];
         var utility = new _utility2.default();
         var reqDate = utility.formatDate(req.body.candlestickdate);
         var range = req.body.candlestickrange;
@@ -131,9 +133,15 @@ var Bearish = function () {
                 var gapExists = isSmallBodyExists && thirddaysOpen < seconddaysLow && seconddaysClose > thirddaysOpen;
                 var doesCloseBelowFirstMidpoint = thirddaysClose < firstdaysMidpoint;
 
+                var twoCrowIsDownTrend = seconddaysLow > thirddaysLow;
+                var twoCrowIsAllBearish = seconddaysOpen > seconddaysClose && thirddaysOpen > thirddaysClose;
+                var twoCrowDoesOpenWithinPreviousBody = seconddaysOpen > thirddaysOpen && thirddaysOpen > seconddaysClose;
+
                 var isDownTrend = firstdaysLow > seconddaysLow && seconddaysLow > thirddaysLow;
                 var isAllBearish = firstdaysOpen > firstdaysClose && seconddaysOpen > seconddaysClose && thirddaysOpen > thirddaysClose;
                 var doesOpenWithinPreviousBody = firstdaysOpen > seconddaysOpen && seconddaysOpen > firstdaysClose && seconddaysOpen > thirddaysOpen && thirddaysOpen > seconddaysClose;
+
+                var shaven = thirddaysClose < thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysLow) && utility.approximateEqual(thirddaysOpen, thirddaysHigh);
 
                 if (isBearishHammer) {
                     bearishHammer.push(result[index].stockCode);
@@ -147,8 +155,14 @@ var Bearish = function () {
                 if (isFirstBullish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBearish && doesCloseBelowFirstMidpoint) {
                     morningStar.push(result[index].stockCode);
                 }
+                if (twoCrowIsDownTrend && twoCrowIsAllBearish && twoCrowDoesOpenWithinPreviousBody) {
+                    twoBlackCrows.push(result[index].stockCode);
+                }
                 if (isDownTrend && isAllBearish && doesOpenWithinPreviousBody) {
                     threeBlackCrows.push(result[index].stockCode);
+                }
+                if (shaven) {
+                    shavenDown.push(result[index].stockCode);
                 }
             }
             res.render('../src/views/candlestick/bearish.ejs', {
@@ -157,7 +171,11 @@ var Bearish = function () {
                 bearishEngulfing: bearishEngulfing,
                 gapDown: gapDown,
                 morningStar: morningStar,
-                threeBlackCrows: threeBlackCrows
+                twoBlackCrows: twoBlackCrows.filter(function (twoBlackCrow) {
+                    return !threeBlackCrows.includes(twoBlackCrow);
+                }),
+                threeBlackCrows: threeBlackCrows,
+                shavenDown: shavenDown
             });
         });
     }

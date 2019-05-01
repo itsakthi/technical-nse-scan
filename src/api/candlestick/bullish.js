@@ -2,7 +2,7 @@ import Utility from '../utility'
 
 export default class Bullish {
     constructor(databaseConnection, collectionName, req, res) {
-        let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = [], threeWhiteSoldiers = []
+        let gapUp = [], bullishHammer = [], bullishHammerInverted = [], bullishEngulfing = [], eveningStar = [], twoWhiteSoldiers = [], threeWhiteSoldiers = [], shavenUp = []
         let utility = new Utility()
         const reqDate = utility.formatDate(req.body.candlestickdate)
         const range = req.body.candlestickrange
@@ -86,9 +86,15 @@ export default class Bullish {
                 let gapExists = (isSmallBodyExists && (thirddaysOpen > seconddaysHigh) && (seconddaysClose < thirddaysOpen))
                 let doesCloseAboveFirstMidpoint = thirddaysClose > firstdaysMidpoint
      
+                let twoWSIsUpTrend = thirddaysHigh > seconddaysHigh
+                let twoWSIsAllBullish = seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose                      
+                let twoWSDoesOpenWithinPreviousBody = seconddaysHigh > thirddaysOpen  && thirddaysOpen < seconddaysClose
+
                 let isUpTrend = seconddaysHigh > firstdaysHigh && thirddaysHigh > seconddaysHigh
                 let isAllBullish = firstdaysOpen < firstdaysClose && seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose                      
                 let doesOpenWithinPreviousBody = firstdaysClose > seconddaysOpen && seconddaysOpen <  firstdaysHigh && seconddaysHigh > thirddaysOpen  && thirddaysOpen < seconddaysClose
+
+                let shaven = thirddaysClose > thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysHigh) && utility.approximateEqual(thirddaysOpen, thirddaysLow)
 
                 if (isBullishHammer) {
                     bullishHammer.push(result[index].stockCode)
@@ -102,8 +108,14 @@ export default class Bullish {
                 if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
                     eveningStar.push(result[index].stockCode)
                 }
+                if (twoWSIsUpTrend && twoWSIsAllBullish && twoWSDoesOpenWithinPreviousBody) {
+                    twoWhiteSoldiers.push(result[index].stockCode)
+                }
                 if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) {
                     threeWhiteSoldiers.push(result[index].stockCode)
+                }
+                if (shaven) {
+                    shavenUp.push(result[index].stockCode)
                 }
             }
             res.render('../src/views/candlestick/bullish.ejs', {
@@ -112,7 +124,9 @@ export default class Bullish {
                 bullishEngulfing,
                 eveningStar,
                 gapUp,
-                threeWhiteSoldiers
+                twoWhiteSoldiers: twoWhiteSoldiers.filter(twoWhiteSoldier => !threeWhiteSoldiers.includes(twoWhiteSoldier)),
+                threeWhiteSoldiers,
+                shavenUp
             })
         })
     }

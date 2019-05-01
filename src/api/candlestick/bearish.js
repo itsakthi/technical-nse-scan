@@ -2,7 +2,7 @@ import Utility from '../utility'
 
 export default class Bearish {
     constructor(databaseConnection, collectionName, req, res) {
-        let gapDown = [], bearishHammer = [], bearishHammerInverted = [], bearishEngulfing = [], morningStar = [], threeBlackCrows = []
+        let gapDown = [], bearishHammer = [], bearishHammerInverted = [], bearishEngulfing = [], morningStar = [], twoBlackCrows = [], threeBlackCrows = [], shavenDown = []
         let utility = new Utility()
         const reqDate = utility.formatDate(req.body.candlestickdate)
         const range = req.body.candlestickrange
@@ -86,10 +86,16 @@ export default class Bearish {
                 let gapExists = (isSmallBodyExists && (thirddaysOpen < seconddaysLow) && (seconddaysClose > thirddaysOpen))
                 let doesCloseBelowFirstMidpoint = thirddaysClose < firstdaysMidpoint
         
+                let twoCrowIsDownTrend = seconddaysLow > thirddaysLow
+                let twoCrowIsAllBearish = seconddaysOpen > seconddaysClose && thirddaysOpen > thirddaysClose                                      
+                let twoCrowDoesOpenWithinPreviousBody = seconddaysOpen > thirddaysOpen  && thirddaysOpen > seconddaysClose
+      
                 let isDownTrend = firstdaysLow > seconddaysLow && seconddaysLow > thirddaysLow
                 let isAllBearish = firstdaysOpen > firstdaysClose && seconddaysOpen > seconddaysClose && thirddaysOpen > thirddaysClose                                      
                 let doesOpenWithinPreviousBody = firstdaysOpen > seconddaysOpen && seconddaysOpen > firstdaysClose && seconddaysOpen > thirddaysOpen  && thirddaysOpen > seconddaysClose
-      
+    
+                let shaven = thirddaysClose < thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysLow) && utility.approximateEqual(thirddaysOpen, thirddaysHigh)
+                
                 if (isBearishHammer) {
                     bearishHammer.push(result[index].stockCode)
                 }
@@ -102,8 +108,14 @@ export default class Bearish {
                 if (isFirstBullish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBearish && doesCloseBelowFirstMidpoint) {
                     morningStar.push(result[index].stockCode)
                 }
+                if (twoCrowIsDownTrend && twoCrowIsAllBearish && twoCrowDoesOpenWithinPreviousBody) {
+                    twoBlackCrows.push(result[index].stockCode)
+                }
                 if (isDownTrend && isAllBearish && doesOpenWithinPreviousBody) {
                     threeBlackCrows.push(result[index].stockCode)
+                }
+                if (shaven) {
+                    shavenDown.push(result[index].stockCode)
                 }
             }
             res.render('../src/views/candlestick/bearish.ejs', {
@@ -112,7 +124,9 @@ export default class Bearish {
                 bearishEngulfing,
                 gapDown,
                 morningStar,
-                threeBlackCrows
+                twoBlackCrows: twoBlackCrows.filter(twoBlackCrow => !threeBlackCrows.includes(twoBlackCrow)),
+                threeBlackCrows,
+                shavenDown
             })
         })
     }

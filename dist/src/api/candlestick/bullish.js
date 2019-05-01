@@ -25,7 +25,9 @@ var Bullish = function () {
             bullishHammerInverted = [],
             bullishEngulfing = [],
             eveningStar = [],
-            threeWhiteSoldiers = [];
+            twoWhiteSoldiers = [],
+            threeWhiteSoldiers = [],
+            shavenUp = [];
         var utility = new _utility2.default();
         var reqDate = utility.formatDate(req.body.candlestickdate);
         var range = req.body.candlestickrange;
@@ -131,9 +133,15 @@ var Bullish = function () {
                 var gapExists = isSmallBodyExists && thirddaysOpen > seconddaysHigh && seconddaysClose < thirddaysOpen;
                 var doesCloseAboveFirstMidpoint = thirddaysClose > firstdaysMidpoint;
 
+                var twoWSIsUpTrend = thirddaysHigh > seconddaysHigh;
+                var twoWSIsAllBullish = seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose;
+                var twoWSDoesOpenWithinPreviousBody = seconddaysOpen < firstdaysHigh && seconddaysHigh > thirddaysOpen && thirddaysOpen < seconddaysClose;
+
                 var isUpTrend = seconddaysHigh > firstdaysHigh && thirddaysHigh > seconddaysHigh;
                 var isAllBullish = firstdaysOpen < firstdaysClose && seconddaysOpen < seconddaysClose && thirddaysOpen < thirddaysClose;
                 var doesOpenWithinPreviousBody = firstdaysClose > seconddaysOpen && seconddaysOpen < firstdaysHigh && seconddaysHigh > thirddaysOpen && thirddaysOpen < seconddaysClose;
+
+                var shaven = thirddaysClose > thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysHigh) && utility.approximateEqual(thirddaysOpen, thirddaysLow);
 
                 if (isBullishHammer) {
                     bullishHammer.push(result[index].stockCode);
@@ -147,8 +155,14 @@ var Bullish = function () {
                 if (isFirstBearish && (dojiExists || isSmallBodyExists) && gapExists && isThirdBullish && doesCloseAboveFirstMidpoint) {
                     eveningStar.push(result[index].stockCode);
                 }
+                if (twoWSIsUpTrend && twoWSIsAllBullish && twoWSDoesOpenWithinPreviousBody) {
+                    twoWhiteSoldiers.push(result[index].stockCode);
+                }
                 if (isUpTrend && isAllBullish && doesOpenWithinPreviousBody) {
                     threeWhiteSoldiers.push(result[index].stockCode);
+                }
+                if (shaven) {
+                    shavenUp.push(result[index].stockCode);
                 }
             }
             res.render('../src/views/candlestick/bullish.ejs', {
@@ -157,7 +171,11 @@ var Bullish = function () {
                 bullishEngulfing: bullishEngulfing,
                 eveningStar: eveningStar,
                 gapUp: gapUp,
-                threeWhiteSoldiers: threeWhiteSoldiers
+                twoWhiteSoldiers: twoWhiteSoldiers.filter(function (twoWhiteSoldier) {
+                    return !threeWhiteSoldiers.includes(twoWhiteSoldier);
+                }),
+                threeWhiteSoldiers: threeWhiteSoldiers,
+                shavenUp: shavenUp
             });
         });
     }

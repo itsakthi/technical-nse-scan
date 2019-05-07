@@ -94,7 +94,8 @@ export default class Bullish {
 
                 let shaven = thirddaysClose > thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysHigh) && utility.approximateEqual(thirddaysOpen, thirddaysLow)
 
-                let isPiercing = thirddaysLow < seconddaysLow && seconddaysLow > thirddaysOpen && thirddaysClose > thirddaysOpen
+                let lastDayMidPoint = (seconddaysOpen + seconddaysClose) / 2
+                let isPiercing = thirddaysLow < seconddaysLow && seconddaysLow > thirddaysOpen && thirddaysClose > thirddaysOpen && thirddaysClose > lastDayMidPoint
                 if (isBullishHammer)
                     bullishHammer.push(result[index].stockCode)
                 if (isBullishInvertedHammer)

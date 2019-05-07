@@ -96,7 +96,8 @@ export default class Bearish {
     
                 let shaven = thirddaysClose < thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysLow) && utility.approximateEqual(thirddaysOpen, thirddaysHigh)
                 
-                let isDarkCloud = thirddaysOpen > seconddaysHigh && thirddaysClose > seconddaysOpen && thirddaysClose < seconddaysClose && thirddaysClose < thirddaysOpen
+                let lastDayMidPoint = (seconddaysOpen + seconddaysClose) / 2
+                let isDarkCloud = thirddaysOpen > seconddaysHigh && thirddaysClose > seconddaysOpen && thirddaysClose < seconddaysClose && thirddaysClose < thirddaysOpen && thirddaysClose > lastDayMidPoint
                 if (isBearishHammer)
                     bearishHammer.push(result[index].stockCode)
                 if (isBearishInvertedHammer)

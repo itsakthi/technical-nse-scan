@@ -143,7 +143,8 @@ var Bullish = function () {
 
                 var shaven = thirddaysClose > thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysHigh) && utility.approximateEqual(thirddaysOpen, thirddaysLow);
 
-                var isPiercing = thirddaysLow < seconddaysLow && seconddaysLow > thirddaysOpen && thirddaysClose > thirddaysOpen;
+                var lastDayMidPoint = (seconddaysOpen + seconddaysClose) / 2;
+                var isPiercing = thirddaysLow < seconddaysLow && seconddaysLow > thirddaysOpen && thirddaysClose > thirddaysOpen && thirddaysClose > lastDayMidPoint;
                 if (isBullishHammer) bullishHammer.push(result[index].stockCode);
                 if (isBullishInvertedHammer) bullishHammerInverted.push(result[index].stockCode);
                 if (isBullishEngulfing) bullishEngulfing.push(result[index].stockCode);

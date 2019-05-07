@@ -32,6 +32,10 @@ var _star = require('./src/api/candlestick/star');
 
 var _star2 = _interopRequireDefault(_star);
 
+var _nr = require('./src/api/nr');
+
+var _nr2 = _interopRequireDefault(_nr);
+
 var _aboveDeliveryVolume = require('./src/api/dv/above-delivery-volume');
 
 var _aboveDeliveryVolume2 = _interopRequireDefault(_aboveDeliveryVolume);
@@ -92,6 +96,11 @@ app.post('/candlestick', function (req, res, next) {
   } else if (req.body.candlestick === 'star') {
     new _star2.default(databaseConnection, 'quote-details', req, res);
   }
+});
+
+app.post('/nr', function (req, res, next) {
+  console.log('Inside NR' + req.body.nrdate);
+  new _nr2.default(databaseConnection, 'quote-details', req, res);
 });
 app.listen(process.env.PORT || 3000, function () {
   return console.log('App listening');

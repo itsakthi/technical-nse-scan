@@ -55,7 +55,22 @@
                     <input type="radio" name="candlestick" value="bullish" checked>Bullish
                     <input type="radio" name="candlestick" value="bearish">Bearish
                     <input type="radio" name="candlestick" value="star">Star
-                    <br>Date(DD-MM): <input type="date" name="candlestickdate">
+                    <br>Date: <input type="date" name="candlestickdate">
+                </div>
+                <br>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+        <br><br><br>
+        <a href="#" onclick="showhide('nr')">NR7 & NR4</a>
+        <div id="nr">
+            <form action="/nr" method="POST">
+                <p>NR7 & NR4</p>
+                <br>
+                <div>
+                    Date: <input type="date" name="nrdate">
                 </div>
                 <br>
                 <div>
@@ -121,6 +136,7 @@
         <script>
         document.getElementById('delivery-volume').style.display = 'none'
         document.getElementById('candle-stick').style.display = 'none'
+        document.getElementById('nr').style.display = 'none'
         document.getElementById('sma-cross-over').style.display = 'none'
         document.getElementById('volume').style.display = 'none'
         function showhide(moduleName) {

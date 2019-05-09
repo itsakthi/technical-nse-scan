@@ -144,7 +144,8 @@ var Bearish = function () {
 
                 var shaven = thirddaysClose < thirddaysOpen && utility.approximateEqual(thirddaysClose, thirddaysLow) && utility.approximateEqual(thirddaysOpen, thirddaysHigh);
 
-                var isDarkCloud = thirddaysOpen > seconddaysHigh && thirddaysClose > seconddaysOpen && thirddaysClose < seconddaysClose && thirddaysClose < thirddaysOpen;
+                var lastDayMidPoint = (seconddaysOpen + seconddaysClose) / 2;
+                var isDarkCloud = thirddaysOpen > seconddaysHigh && thirddaysClose > seconddaysOpen && thirddaysClose < seconddaysClose && thirddaysClose < thirddaysOpen && thirddaysClose > lastDayMidPoint;
                 if (isBearishHammer) bearishHammer.push(result[index].stockCode);
                 if (isBearishInvertedHammer) bearishHammerInverted.push(result[index].stockCode);
                 if (isBearishEngulfing) bearishEngulfing.push(result[index].stockCode);

@@ -20,7 +20,7 @@ export default class AbovePreviousDV {
                 }
                 if(currentDV >= (prevDV * 2)) {
                     stockName.push(result[index].stockCode)
-                    deliveryPercentageDiff.push(((currentDV - prevDV) / prevDV) * 100)
+                    deliveryPercentageDiff.push((currentDV / prevDV) * 100)
                 }
             }
             res.render('../src/views/dv/above-previous-dv.ejs', {

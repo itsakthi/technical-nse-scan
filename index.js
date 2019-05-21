@@ -67,4 +67,4 @@ app.post('/nr', (req, res, next) => {
   console.log('Inside NR' + req.body.nrdate)
   new NR(databaseConnection, 'quote-details', req, res)
 })
-app.listen(process.env.PORT || 3000, () => console.log('App listening'))
+app.listen(process.env.PORT || 3001, () => console.log('App listening'))

@@ -22,6 +22,10 @@
             <br>
             <form action="/dv/abovepreviousdv" method="POST">
                 <div>
+                    <input type="radio" name="delivery" value="delivery_volume" checked>Delivery Volume
+                    <input type="radio" name="delivery" value="delivery_percentage">Delivery Percentage
+                </div>
+                <div>
                     <label>More than % of previous day(default - 50%)</label>
                     <input type="text" name="above_dv_prev">
                 </div>

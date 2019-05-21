@@ -59,6 +59,7 @@ var PopulateMasterDocument = function PopulateMasterDocument(req, res, stockList
 								quoteHighPrice: 0,
 								quoteLowPrice: 0,
 								quoteVolume: 0,
+								quoteVolumeDelivered: 0,
 								quoteDeliveryPercentage: 0,
 								quoteEQ: false
 							};
@@ -70,6 +71,7 @@ var PopulateMasterDocument = function PopulateMasterDocument(req, res, stockList
 								quote.quoteHighPrice = quoteDetail['High Price'];
 								quote.quoteLowPrice = quoteDetail['Low Price'];
 								quote.quoteVolume = quoteDetail['Total Traded Quantity'];
+								quote.quoteVolumeDelivered = quoteDetail['DeliverableQty'];
 								quote.quoteDeliveryPercentage = quoteDetail['% Dly Qt toTraded Qty'];
 								quote.quoteEQ = true;
 								quoteDBRecord.push(quote);

@@ -102,6 +102,6 @@ app.post('/nr', function (req, res, next) {
   console.log('Inside NR' + req.body.nrdate);
   new _nr2.default(databaseConnection, 'quote-details', req, res);
 });
-app.listen(process.env.PORT || 3000, function () {
+app.listen(process.env.PORT || 3001, function () {
   return console.log('App listening');
 });

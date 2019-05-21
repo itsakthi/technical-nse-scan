@@ -10,7 +10,7 @@ export default class AbovePreviousDV {
                 if(req.body.delivery === 'delivery_volume') {
                     const prevVolume = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolume.replace(/,/g, ''))
                     const currentVolume = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolume.replace(/,/g, ''))
-                    if(currentVolume < prevVolume * aboveDVPrev) {
+                    if(currentVolume <= (prevVolume * aboveDVPrev)) {
                         prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolumeDelivered.replace(/,/g, ''))
                         currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolumeDelivered.replace(/,/g, ''))
                     }
@@ -18,7 +18,7 @@ export default class AbovePreviousDV {
                     prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteDeliveryPercentage.replace(/,/g, ''))
                     currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteDeliveryPercentage.replace(/,/g, ''))
                 }
-                if(currentDV >= prevDV * aboveDVPrev) {
+                if(currentDV >= (prevDV * 2)) {
                     stockName.push(result[index].stockCode)
                     deliveryPercentageDiff.push(((currentDV - prevDV) / prevDV) * 100)
                 }

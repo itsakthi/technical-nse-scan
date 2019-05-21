@@ -21,7 +21,7 @@ var AbovePreviousDV = function AbovePreviousDV(databaseConnection, collectionNam
             if (req.body.delivery === 'delivery_volume') {
                 var prevVolume = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolume.replace(/,/g, ''));
                 var currentVolume = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolume.replace(/,/g, ''));
-                if (currentVolume < prevVolume * aboveDVPrev) {
+                if (currentVolume <= prevVolume * aboveDVPrev) {
                     prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolumeDelivered.replace(/,/g, ''));
                     currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolumeDelivered.replace(/,/g, ''));
                 }
@@ -29,7 +29,7 @@ var AbovePreviousDV = function AbovePreviousDV(databaseConnection, collectionNam
                 prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteDeliveryPercentage.replace(/,/g, ''));
                 currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteDeliveryPercentage.replace(/,/g, ''));
             }
-            if (currentDV >= prevDV * aboveDVPrev) {
+            if (currentDV >= prevDV * 2) {
                 stockName.push(result[index].stockCode);
                 deliveryPercentageDiff.push((currentDV - prevDV) / prevDV * 100);
             }

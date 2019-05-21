@@ -9,7 +9,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var AbovePreviousDV = function AbovePreviousDV(databaseConnection, collectionName, req, res) {
     _classCallCheck(this, AbovePreviousDV);
 
-    var aboveDVPrev = req.body.above_dv_prev || 50;
+    var aboveDVPrev = req.body.above_dv_prev || 2;
     databaseConnection.collection(collectionName).find().toArray(function (error, result) {
         if (error) return console.log(error);
         var stockName = [],
@@ -19,13 +19,17 @@ var AbovePreviousDV = function AbovePreviousDV(databaseConnection, collectionNam
             var prevDV = void 0,
                 currentDV = void 0;
             if (req.body.delivery === 'delivery_volume') {
-                prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolumeDelivered.replace(/,/g, ''));
-                currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolumeDelivered.replace(/,/g, ''));
+                var prevVolume = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolume.replace(/,/g, ''));
+                var currentVolume = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolume.replace(/,/g, ''));
+                if (currentVolume < prevVolume * aboveDVPrev) {
+                    prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteVolumeDelivered.replace(/,/g, ''));
+                    currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteVolumeDelivered.replace(/,/g, ''));
+                }
             } else if (req.body.delivery === 'delivery_percentage') {
                 prevDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 2].quoteDeliveryPercentage.replace(/,/g, ''));
                 currentDV = parseFloat(result[index].quoteDBRecord[quoteDBRecordCount - 1].quoteDeliveryPercentage.replace(/,/g, ''));
             }
-            if (currentDV > prevDV * (100 / aboveDVPrev)) {
+            if (currentDV >= prevDV * aboveDVPrev) {
                 stockName.push(result[index].stockCode);
                 deliveryPercentageDiff.push((currentDV - prevDV) / prevDV * 100);
             }

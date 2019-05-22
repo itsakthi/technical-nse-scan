@@ -9,6 +9,7 @@ export default class NR {
   databaseConnection.collection(collectionName).find().toArray((error, result)=> {
    if (error) return console.log(error)
    for(let index = 0;index < result.length - 1;index++) {
+    console.log(result[index].stockCode)
     const reqDateIndex = result[index].quoteDBRecord.findIndex(dbRecord => dbRecord.quoteDate == reqDate)
     let currentHigh = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteHighPrice.replace(/,/g, ''))
     let currentLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))

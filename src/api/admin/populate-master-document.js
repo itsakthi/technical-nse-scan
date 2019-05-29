@@ -24,6 +24,7 @@ export default class PopulateMasterDocument {
 					symbolCountResponse += chunk
 				})
 				http_res.on("end", function () {
+console.log(symbolCountResponse)
 					options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?symbol=' + stockList[stockListIndex] +'&segmentLink=3&symbolCount=' + symbolCountResponse.trim() + '&series=EQ&dateRange=3month&fromDate=&toDate=&dataType=PRICEVOLUMEDELIVERABLE'
 					https.get(options, function (http_res) {
 						let quoteDetailsResponse = ""
@@ -31,6 +32,7 @@ export default class PopulateMasterDocument {
 							quoteDetailsResponse += chunk
 						})
 						http_res.on("end", function () {
+console.log(quoteDetailsResponse)
 							const quoteDetailsJson = new HtmlTableToJson(quoteDetailsResponse)
 							const quoteDetails = quoteDetailsJson.results[0]
 							let quoteDetailsCounter, quoteDBRecord = []

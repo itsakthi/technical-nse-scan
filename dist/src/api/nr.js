@@ -25,6 +25,7 @@ var NR = function NR(databaseConnection, collectionName, req, res) {
   databaseConnection.collection(collectionName).find().toArray(function (error, result) {
     if (error) return console.log(error);
     for (var index = 0; index < result.length - 1; index++) {
+      console.log(result[index].stockCode);
       var reqDateIndex = result[index].quoteDBRecord.findIndex(function (dbRecord) {
         return dbRecord.quoteDate == reqDate;
       });

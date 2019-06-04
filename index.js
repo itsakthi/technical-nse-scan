@@ -15,6 +15,8 @@ import AboveDeliveryVolume from './src/api/dv/above-delivery-volume'
 import AbovePreviousDV from './src/api/dv/above-previous-dv'
 import CommonHighDV from './src/api/dv/common-high-dv'
 
+import AboveVolume from './src/api/above-volume'
+
 const app = express()
 app.use(cors())
 app.use(express.static('public'))
@@ -66,5 +68,10 @@ app.post('/candlestick', (req, res, next) => {
 app.post('/nr', (req, res, next) => {
   console.log('Inside NR' + req.body.nrdate)
   new NR(databaseConnection, 'quote-details', req, res)
+})
+
+app.post('/abovevolume', (req, res, next) => {
+  console.log('Above Volume')
+  new AboveVolume(databaseConnection, 'quote-details', req, res)
 })
 app.listen(process.env.PORT || 3000, () => console.log('App listening'))

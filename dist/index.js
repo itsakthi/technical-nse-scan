@@ -48,6 +48,10 @@ var _commonHighDv = require('./src/api/dv/common-high-dv');
 
 var _commonHighDv2 = _interopRequireDefault(_commonHighDv);
 
+var _aboveVolume = require('./src/api/above-volume');
+
+var _aboveVolume2 = _interopRequireDefault(_aboveVolume);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var app = (0, _express2.default)();
@@ -101,6 +105,11 @@ app.post('/candlestick', function (req, res, next) {
 app.post('/nr', function (req, res, next) {
   console.log('Inside NR' + req.body.nrdate);
   new _nr2.default(databaseConnection, 'quote-details', req, res);
+});
+
+app.post('/abovevolume', function (req, res, next) {
+  console.log('Above Volume');
+  new _aboveVolume2.default(databaseConnection, 'quote-details', req, res);
 });
 app.listen(process.env.PORT || 3000, function () {
   return console.log('App listening');

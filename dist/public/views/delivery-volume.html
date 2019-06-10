@@ -5,17 +5,94 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Technical Analysis</title>
         <link rel="shortcut icon" type="image/png" href="../favicon.ico"/>
+        <style>
+            th, td {
+                padding: 10px;
+            }
+        </style>
     </head>
     <body>
-        <br>
+        Stock Price:<input type="number" id="stockPrice">
+        <br><br>
+        <table>
+            <tr>
+                <th>Result</th>
+                <th>Call Price</th>
+                <th>Strike Price</th>
+                <th>Put Price</th>
+                <th>Result</th>
+            </tr>
+            <tr>
+                <td><input type="number" id="callResult1"></td>
+                <td><input type="number" id="callPrice1"></td>
+                <td><input type="number" id="strickPrice1"></td>
+                <td><input type="number" id="putPrice1"></td>
+                <td><input type="number" id="putResult1"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="callResult2"></td>
+                <td><input type="number" id="callPrice2"></td>
+                <td><input type="number" id="strickPrice2"></td>
+                <td><input type="number" id="putPrice2"></td>
+                <td><input type="number" id="putResult2"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="callResult3"></td>
+                <td><input type="number" id="callPrice3"></td>
+                <td><input type="number" id="strickPrice3"></td>
+                <td><input type="number" id="putPrice3"></td>
+                <td><input type="number" id="putResult3"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="callResult4"></td>
+                <td><input type="number" id="callPrice4"></td>
+                <td><input type="number" id="strickPrice4"></td>
+                <td><input type="number" id="putPrice4"></td>
+                <td><input type="number" id="putResult4"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="callResult5"></td>
+                <td><input type="number" id="callPrice5"></td>
+                <td><input type="number" id="strickPrice5"></td>
+                <td><input type="number" id="putPrice5"></td>
+                <td><input type="number" id="putResult5"></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="callResult6"></td>
+                <td><input type="number" id="callPrice6"></td>
+                <td><input type="number" id="strickPrice6"></td>
+                <td><input type="number" id="putPrice6"></td>
+                <td><input type="number" id="putResult6"></td>
+            </tr>    
+        </table>
+        <br><button type="submit" id="calculate" onclick="calculate()">Calculate</button><br><br>
         <form action="/dv/masterdeliverypercent" method="POST">
             <div>
-                <input type="text" name="quotesfrom"></div>
-                <input type="text" name="quotefor"></div>
+                <input type="text" name="quotesfrom">
+                <input type="text" name="quotefor">
+            </div>
             <br>
             <div>
                 <button type="submit">Submit</button>
             </div>
         </form>
+        <script>
+            function calculate() {
+                const stockPrice = parseFloat(document.getElementById('stockPrice').value)
+                for(i = 1; i <= 6; i++) {
+                    const callPrice = parseFloat(document.getElementById('callPrice' + i).value)
+                    const strickPrice = parseFloat(document.getElementById('strickPrice' + i).value)
+                    const putPrice = parseFloat(document.getElementById('putPrice' + i).value)
+                    const strickPriceValue = stockPrice - strickPrice
+                    if (strickPriceValue >= 0) {
+                        document.getElementById('callResult' + i).value = callPrice - strickPriceValue
+                        document.getElementById('putResult' + i).value = putPrice + strickPriceValue
+                    } else {
+                        document.getElementById('callResult' + i).value = callPrice - strickPriceValue
+                        document.getElementById('putResult' + i).value = putPrice + strickPriceValue
+                    }
+                }
+            }
+        </script>
     </body>
 </html>

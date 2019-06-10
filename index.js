@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import bodyparser from 'body-parser'
 import mongodb from 'mongodb'
+import fs from 'fs'
+import parse from 'csv-parse'
 
 import PopulateMasterDocument from './src/api/admin/populate-master-document'
 
@@ -63,6 +65,35 @@ app.post('/candlestick', (req, res, next) => {
   } else if(req.body.candlestick === 'star') {
     new Star(databaseConnection, 'quote-details', req, res)
   }
+})
+
+app.get('/stock', (req, res) => {
+  console.log('started')
+  let symbol
+  let xaxisDate = []
+  let yaxisLTP = []
+  let yaxisOI = []
+  let yaxisStockPrice = []
+  let highChartTemplateData
+  const parser = parse({delimiter: ','}, function(err, stockDataList) {
+    symbol = stockDataList[1][0]
+    stockDataList.forEach(stockData => {
+      console.log(stockData[4])
+      xaxisDate.push(stockData[1])
+      yaxisLTP.push(parseFloat(stockData[10]))
+      yaxisOI.push(parseFloat(stockData[14]))
+      yaxisStockPrice.push(parseFloat(stockData[16]))
+    });
+    /* highChartTemplateData.title.text = symbol + '-' + strikePrice
+    highChartTemplateData.xAxis[0].categories = xaxisDate
+    highChartTemplateData.series[0].data = yaxisLTP
+    highChartTemplateData.series[1].data = yaxisOI
+    highChartTemplateData.series[2].data = yaxisStockPrice */
+    highChartTemplateData = yaxisStockPrice + xaxisDate
+    res.setHeader('Content-Type', 'application/json')
+    res.send(highChartTemplateData)
+  });
+  fs.createReadStream('OPTSTK_APOLLOHOSP_CE_26-Apr-2019_TO_07-Jun-2019.csv').pipe(parser)
 })
 
 app.post('/nr', (req, res, next) => {

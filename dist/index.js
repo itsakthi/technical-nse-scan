@@ -16,6 +16,14 @@ var _mongodb = require('mongodb');
 
 var _mongodb2 = _interopRequireDefault(_mongodb);
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _csvParse = require('csv-parse');
+
+var _csvParse2 = _interopRequireDefault(_csvParse);
+
 var _populateMasterDocument = require('./src/api/admin/populate-master-document');
 
 var _populateMasterDocument2 = _interopRequireDefault(_populateMasterDocument);
@@ -100,6 +108,35 @@ app.post('/candlestick', function (req, res, next) {
   } else if (req.body.candlestick === 'star') {
     new _star2.default(databaseConnection, 'quote-details', req, res);
   }
+});
+
+app.get('/stock', function (req, res) {
+  console.log('started');
+  var symbol = void 0;
+  var xaxisDate = [];
+  var yaxisLTP = [];
+  var yaxisOI = [];
+  var yaxisStockPrice = [];
+  var highChartTemplateData = void 0;
+  var parser = (0, _csvParse2.default)({ delimiter: ',' }, function (err, stockDataList) {
+    symbol = stockDataList[1][0];
+    stockDataList.forEach(function (stockData) {
+      console.log(stockData[4]);
+      xaxisDate.push(stockData[1]);
+      yaxisLTP.push(parseFloat(stockData[10]));
+      yaxisOI.push(parseFloat(stockData[14]));
+      yaxisStockPrice.push(parseFloat(stockData[16]));
+    });
+    /* highChartTemplateData.title.text = symbol + '-' + strikePrice
+    highChartTemplateData.xAxis[0].categories = xaxisDate
+    highChartTemplateData.series[0].data = yaxisLTP
+    highChartTemplateData.series[1].data = yaxisOI
+    highChartTemplateData.series[2].data = yaxisStockPrice */
+    highChartTemplateData = yaxisStockPrice + xaxisDate;
+    res.setHeader('Content-Type', 'application/json');
+    res.send(highChartTemplateData);
+  });
+  _fs2.default.createReadStream('OPTSTK_APOLLOHOSP_CE_26-Apr-2019_TO_07-Jun-2019.csv').pipe(parser);
 });
 
 app.post('/nr', function (req, res, next) {

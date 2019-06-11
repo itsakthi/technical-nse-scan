@@ -56,31 +56,40 @@ export default class OptionPrice {
           strikePriceRange.push((atTheMoney + 1 * strikePriceDiff).toFixed(2))
           strikePriceRange.push((atTheMoney + 2 * strikePriceDiff).toFixed(2))
           strikePriceRange.push((atTheMoney + 3 * strikePriceDiff).toFixed(2))
+          const underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''))
           for(optionDetailsCounter = 0; optionDetailsCounter < optionDetails.length; optionDetailsCounter++) {
             const optionDetail = optionDetails[optionDetailsCounter]
             if (strikePriceRange.includes(optionDetail['Strike Price'].replace(/,/g, ''))) {
               let price, optionPrice
+              const StrikePrice = parseFloat(optionDetail['Strike Price'].replace(/,/g, ''))
+              const optionType = optionDetail['Optiontype']
               if (optionDetail['No. of contracts'] == 0)
                 optionPrice = parseFloat(optionDetail['Settle Price'])
               else
                 optionPrice = parseFloat(optionDetail['Close'])
-              if (optionDetail['Optiontype'] === 'CE') {
-                price = optionPrice - (parseFloat(optionDetail['Underlying Value'].replace(/,/g, '')) - parseFloat(optionDetail['Strike Price'].replace(/,/g, '')))
-              } else if (optionDetail['Optiontype'] === 'PE') {
-                price = optionPrice + (parseFloat(optionDetail['Underlying Value'].replace(/,/g, '')) - parseFloat(optionDetail['Strike Price'].replace(/,/g, '')))
-              }
+              const intrinsicValue = underlyingPrice - StrikePrice
+              price = optionPrice
+              if (optionType === 'CE' && intrinsicValue >= 0)
+                  price = optionPrice - intrinsicValue
+              else if (optionType === 'PE' && intrinsicValue <= 0)
+                  price = optionPrice + intrinsicValue
+              const expiryDate = new Date(optionDetail['Expiry'])
+              const optionDate = new Date(optionDetail['Date'])
+              const diffDays = parseInt(expiryDate - optionDate) / (1000 * 60 * 60 * 24)
               xaxisDate.push(optionDetail['Date'])
               yaxisOptionData.push({
                 date: optionDetail['Date'],
                 price,
-                optionType: optionDetail['Optiontype'],
-                strikePrice: optionDetail['Strike Price']
+                optionType: optionType,
+                strikePrice: StrikePrice
+                // iv: utility.impliedVolatility(optionPrice, underlyingPrice, StrikePrice, (diffDays - 1) / 365, 0.1, optionType === 'CE' ? 'call' : 'put')
              })
             }
           }
           optionDataTemp.title.text = symbol
           optionDataTemp.xAxis[0].categories = xaxisDate
           optionDataTemp.series[0].data = yaxisOptionData
+          optionDataTemp.series[0].yAxis = underlyingPrice
           res.setHeader('Content-Type', 'application/json')
           res.send(optionDataTemp)
         })

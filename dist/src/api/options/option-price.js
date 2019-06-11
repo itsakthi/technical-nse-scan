@@ -78,29 +78,36 @@ var OptionPrice = function OptionPrice(req, res) {
           strikePriceRange.push((atTheMoney + 1 * strikePriceDiff).toFixed(2));
           strikePriceRange.push((atTheMoney + 2 * strikePriceDiff).toFixed(2));
           strikePriceRange.push((atTheMoney + 3 * strikePriceDiff).toFixed(2));
+          var underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''));
+          console.log(underlyingPrice);
           for (optionDetailsCounter = 0; optionDetailsCounter < optionDetails.length; optionDetailsCounter++) {
             var optionDetail = optionDetails[optionDetailsCounter];
             if (strikePriceRange.includes(optionDetail['Strike Price'].replace(/,/g, ''))) {
               var price = void 0,
                   optionPrice = void 0;
+              var StrikePrice = parseFloat(optionDetail['Strike Price'].replace(/,/g, ''));
+              var optionType = optionDetail['Optiontype'];
               if (optionDetail['No. of contracts'] == 0) optionPrice = parseFloat(optionDetail['Settle Price']);else optionPrice = parseFloat(optionDetail['Close']);
-              if (optionDetail['Optiontype'] === 'CE') {
-                price = optionPrice - (parseFloat(optionDetail['Underlying Value'].replace(/,/g, '')) - parseFloat(optionDetail['Strike Price'].replace(/,/g, '')));
-              } else if (optionDetail['Optiontype'] === 'PE') {
-                price = optionPrice + (parseFloat(optionDetail['Underlying Value'].replace(/,/g, '')) - parseFloat(optionDetail['Strike Price'].replace(/,/g, '')));
-              }
+              var intrinsicValue = underlyingPrice - StrikePrice;
+              price = optionPrice;
+              if (optionType === 'CE' && intrinsicValue >= 0) price = optionPrice - intrinsicValue;else if (optionType === 'PE' && intrinsicValue <= 0) price = optionPrice + intrinsicValue;
+              var expiryDate = new Date(optionDetail['Expiry']);
+              var optionDate = new Date(optionDetail['Date']);
+              var diffDays = parseInt(expiryDate - optionDate) / (1000 * 60 * 60 * 24);
               xaxisDate.push(optionDetail['Date']);
               yaxisOptionData.push({
                 date: optionDetail['Date'],
                 price: price,
-                optionType: optionDetail['Optiontype'],
-                strikePrice: optionDetail['Strike Price']
+                optionType: optionType,
+                strikePrice: StrikePrice
+                // iv: utility.impliedVolatility(optionPrice, underlyingPrice, StrikePrice, (diffDays - 1) / 365, 0.1, optionType === 'CE' ? 'call' : 'put')
               });
             }
           }
           _optionDataTemplate2.default.title.text = symbol;
           _optionDataTemplate2.default.xAxis[0].categories = xaxisDate;
           _optionDataTemplate2.default.series[0].data = yaxisOptionData;
+          _optionDataTemplate2.default.series[0].yAxis = underlyingPrice;
           res.setHeader('Content-Type', 'application/json');
           res.send(_optionDataTemplate2.default);
         });

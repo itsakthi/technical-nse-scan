@@ -6,66 +6,24 @@
         <title>Technical Analysis</title>
         <link rel="shortcut icon" type="image/png" href="../favicon.ico"/>
         <style>
-            th, td {
-                padding: 10px;
+            input {
+                margin: 10px;
             }
         </style>
     </head>
     <body>
-        Stock Price:<input type="number" id="stockPrice">
+        <form action="/options/optionPrice" method="POST">
+            <div>
+                Option Symbol: <input type="text" name="optionSymbol"><br>
+                Date: <input type="date" name="optionpricedate"><br>
+                Strick Price1: <input type="text" name="strikePriceRange"><br>
+            </div>
+            <br>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
         <br><br>
-        <table>
-            <tr>
-                <th>Result</th>
-                <th>Call Price</th>
-                <th>Strike Price</th>
-                <th>Put Price</th>
-                <th>Result</th>
-            </tr>
-            <tr>
-                <td><input type="number" id="callResult1"></td>
-                <td><input type="number" id="callPrice1"></td>
-                <td><input type="number" id="strickPrice1"></td>
-                <td><input type="number" id="putPrice1"></td>
-                <td><input type="number" id="putResult1"></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="callResult2"></td>
-                <td><input type="number" id="callPrice2"></td>
-                <td><input type="number" id="strickPrice2"></td>
-                <td><input type="number" id="putPrice2"></td>
-                <td><input type="number" id="putResult2"></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="callResult3"></td>
-                <td><input type="number" id="callPrice3"></td>
-                <td><input type="number" id="strickPrice3"></td>
-                <td><input type="number" id="putPrice3"></td>
-                <td><input type="number" id="putResult3"></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="callResult4"></td>
-                <td><input type="number" id="callPrice4"></td>
-                <td><input type="number" id="strickPrice4"></td>
-                <td><input type="number" id="putPrice4"></td>
-                <td><input type="number" id="putResult4"></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="callResult5"></td>
-                <td><input type="number" id="callPrice5"></td>
-                <td><input type="number" id="strickPrice5"></td>
-                <td><input type="number" id="putPrice5"></td>
-                <td><input type="number" id="putResult5"></td>
-            </tr>
-            <tr>
-                <td><input type="number" id="callResult6"></td>
-                <td><input type="number" id="callPrice6"></td>
-                <td><input type="number" id="strickPrice6"></td>
-                <td><input type="number" id="putPrice6"></td>
-                <td><input type="number" id="putResult6"></td>
-            </tr>    
-        </table>
-        <br><button type="submit" id="calculate" onclick="calculate()">Calculate</button><br><br>
         <form action="/dv/masterdeliverypercent" method="POST">
             <div>
                 <input type="text" name="quotesfrom">

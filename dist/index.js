@@ -16,14 +16,6 @@ var _mongodb = require('mongodb');
 
 var _mongodb2 = _interopRequireDefault(_mongodb);
 
-var _fs = require('fs');
-
-var _fs2 = _interopRequireDefault(_fs);
-
-var _csvParse = require('csv-parse');
-
-var _csvParse2 = _interopRequireDefault(_csvParse);
-
 var _populateMasterDocument = require('./src/api/admin/populate-master-document');
 
 var _populateMasterDocument2 = _interopRequireDefault(_populateMasterDocument);
@@ -56,6 +48,10 @@ var _commonHighDv = require('./src/api/dv/common-high-dv');
 
 var _commonHighDv2 = _interopRequireDefault(_commonHighDv);
 
+var _optionPrice = require('./src/api/options/option-price');
+
+var _optionPrice2 = _interopRequireDefault(_optionPrice);
+
 var _aboveVolume = require('./src/api/above-volume');
 
 var _aboveVolume2 = _interopRequireDefault(_aboveVolume);
@@ -68,7 +64,7 @@ app.use(_express2.default.static('public'));
 app.use(_bodyParser2.default.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
-var stockList = ['ACC', 'ADANIENT', 'ADANIPORTS', 'ADANIPOWER', 'AJANTPHARM', 'ALBK', 'AMARAJABAT', 'AMBUJACEM', 'ANDHRABANK', 'APOLLOHOSP', 'APOLLOTYRE', 'ARVIND', 'ASHOKLEY', 'ASIANPAINT', 'AUROPHARMA', 'AXISBANK', 'BALKRISIND', 'BALRAMCHIN', 'BANKBARODA', 'BANKINDIA', 'BATAINDIA', 'BEML', 'BERGEPAINT', 'BEL', 'BHARATFIN', 'BHARATFORG', 'BPCL', 'BHARTIARTL', 'INFRATEL', 'BHEL', 'BIOCON', 'CADILAHC', 'CANFINHOME', 'CANBK', 'CASTROLIND', 'CESC', 'CGPOWER', 'CHENNPETRO', 'CIPLA', 'COALINDIA', 'CONCOR', 'CUMMINSIND', 'DABUR', 'DCBBANK', 'DHFL', 'DISHTV', 'DIVISLAB', 'DLF', 'ENGINERSIN', 'EQUITAS', 'ESCORTS', 'EXIDEIND', 'FEDERALBNK', 'GAIL', 'GLENMARK', 'GMRINFRA', 'GODREJCP', 'GODREJIND', 'GRANULES', 'GRASIM', 'GSFC', 'HAVELLS', 'HCLTECH', 'HEXAWARE', 'HINDALCO', 'HCC', 'HINDPETRO', 'HINDUNILVR', 'HINDZINC', 'ICICIBANK', 'ICICIPRULI', 'IDBI', 'IDEA', 'IDFCFIRSTB', 'IDFC', 'IFCI', 'IBULHSGFIN', 'INDIANB', 'IOC', 'IGL', 'INFIBEAM', 'INFY', 'INDIGO', 'IRB', 'ITC', 'JISLJALEQS', 'JPASSOCIAT', 'JETAIRWAYS', 'JINDALSTEL', 'JSWSTEEL', 'JUBLFOOD', 'JUSTDIAL', 'KAJARIACER', 'KTKBANK', 'KSCL', 'LT', 'LICHSGFIN', 'LUPIN', 'MGL', 'MANAPPURAM', 'MRPL', 'MARICO', 'MFSL', 'MINDTREE', 'MOTHERSUMI', 'MUTHOOTFIN', 'NATIONALUM', 'NBCC', 'NCC', 'NHPC', 'NIITTECH', 'NMDC', 'NTPC', 'ONGC', 'OIL', 'ORIENTBANK', 'PCJEWELLER', 'PETRONET', 'PIDILITIND', 'PFC', 'POWERGRID', 'PTC', 'PNB', 'PVR', 'RAYMOND', 'RBLBANK', 'RELCAPITAL', 'RCOM', 'RELIANCE', 'RELINFRA', 'RPOWER', 'REPCOHOME', 'RECLTD', 'SRTRANSFIN', 'SIEMENS', 'SREINFRA', 'SBIN', 'SAIL', 'STAR', 'SUNPHARMA', 'SUNTV', 'SUZLON', 'SYNDIBANK', 'TATACHEM', 'TATACOMM', 'TCS', 'TATAELXSI', 'TATAGLOBAL', 'TATAMTRDVR', 'TATAMOTORS', 'TATAPOWER', 'TATASTEEL', 'TECHM', 'INDIACEM', 'RAMCOCEM', 'SOUTHBANK', 'TITAN', 'TORNTPHARM', 'TORNTPOWER', 'TV18BRDCST', 'TVSMOTOR', 'UJJIVAN', 'UNIONBANK', 'UBL', 'UPL', 'VEDL', 'VGUARD', 'VOLTAS', 'WIPRO', 'WOCKPHARMA', 'YESBANK', 'ZEEL'];
+var stockList = ['ACC', 'ADANIENT', 'ADANIPORTS', 'ADANIPOWER', 'AJANTPHARM', 'ALBK', 'AMARAJABAT', 'AMBUJACEM', 'ANDHRABANK', 'APOLLOHOSP', 'APOLLOTYRE', 'ARVIND', 'ASHOKLEY', 'ASIANPAINT', 'AUROPHARMA', 'AXISBANK', 'BALKRISIND', 'BANKBARODA', 'BANKINDIA', 'BATAINDIA', 'BEML', 'BERGEPAINT', 'BEL', 'BHARATFIN', 'BHARATFORG', 'BPCL', 'BHARTIARTL', 'INFRATEL', 'BHEL', 'BIOCON', 'CADILAHC', 'CANFINHOME', 'CANBK', 'CASTROLIND', 'CESC', 'CGPOWER', 'CHENNPETRO', 'CIPLA', 'COALINDIA', 'CONCOR', 'CUMMINSIND', 'DABUR', 'DCBBANK', 'DHFL', 'DISHTV', 'DLF', 'ENGINERSIN', 'EQUITAS', 'ESCORTS', 'EXIDEIND', 'FEDERALBNK', 'GAIL', 'GLENMARK', 'GMRINFRA', 'GODREJCP', 'GODREJIND', 'GRANULES', 'GRASIM', 'GSFC', 'HAVELLS', 'HCLTECH', 'HEXAWARE', 'HINDALCO', 'HCC', 'HINDPETRO', 'HINDUNILVR', 'HINDZINC', 'ICICIBANK', 'ICICIPRULI', 'IDBI', 'IDEA', 'IDFCFIRSTB', 'IDFC', 'IFCI', 'IBULHSGFIN', 'INDIANB', 'IOC', 'IGL', 'INFIBEAM', 'INFY', 'INDIGO', 'IRB', 'ITC', 'JISLJALEQS', 'JPASSOCIAT', 'JETAIRWAYS', 'JINDALSTEL', 'JSWSTEEL', 'JUBLFOOD', 'JUSTDIAL', 'KAJARIACER', 'KTKBANK', 'KSCL', 'LT', 'LICHSGFIN', 'LUPIN', 'MGL', 'MANAPPURAM', 'MRPL', 'MARICO', 'MFSL', 'MINDTREE', 'MOTHERSUMI', 'MUTHOOTFIN', 'NATIONALUM', 'NBCC', 'NCC', 'NHPC', 'NIITTECH', 'NMDC', 'NTPC', 'ONGC', 'OIL', 'ORIENTBANK', 'PCJEWELLER', 'PETRONET', 'PIDILITIND', 'PFC', 'POWERGRID', 'PTC', 'PNB', 'PVR', 'RAYMOND', 'RBLBANK', 'RELCAPITAL', 'RCOM', 'RELIANCE', 'RELINFRA', 'RPOWER', 'REPCOHOME', 'RECLTD', 'SRTRANSFIN', 'SIEMENS', 'SREINFRA', 'SBIN', 'SAIL', 'STAR', 'SUNPHARMA', 'SUNTV', 'SUZLON', 'SYNDIBANK', 'TATACHEM', 'TATACOMM', 'TCS', 'TATAELXSI', 'TATAGLOBAL', 'TATAMTRDVR', 'TATAMOTORS', 'TATAPOWER', 'TATASTEEL', 'TECHM', 'INDIACEM', 'RAMCOCEM', 'SOUTHBANK', 'TITAN', 'TORNTPHARM', 'TORNTPOWER', 'TV18BRDCST', 'TVSMOTOR', 'UJJIVAN', 'UNIONBANK', 'UBL', 'UPL', 'VEDL', 'VGUARD', 'VOLTAS', 'WIPRO', 'WOCKPHARMA', 'YESBANK', 'ZEEL'];
 
 var MONGODB_URL = 'mongodb://admin:admin000@ds123625.mlab.com:23625/stock-details-v1';
 var MongoClient = _mongodb2.default.MongoClient;
@@ -110,33 +106,9 @@ app.post('/candlestick', function (req, res, next) {
   }
 });
 
-app.get('/stock', function (req, res) {
-  console.log('started');
-  var symbol = void 0;
-  var xaxisDate = [];
-  var yaxisLTP = [];
-  var yaxisOI = [];
-  var yaxisStockPrice = [];
-  var highChartTemplateData = void 0;
-  var parser = (0, _csvParse2.default)({ delimiter: ',' }, function (err, stockDataList) {
-    symbol = stockDataList[1][0];
-    stockDataList.forEach(function (stockData) {
-      console.log(stockData[4]);
-      xaxisDate.push(stockData[1]);
-      yaxisLTP.push(parseFloat(stockData[10]));
-      yaxisOI.push(parseFloat(stockData[14]));
-      yaxisStockPrice.push(parseFloat(stockData[16]));
-    });
-    /* highChartTemplateData.title.text = symbol + '-' + strikePrice
-    highChartTemplateData.xAxis[0].categories = xaxisDate
-    highChartTemplateData.series[0].data = yaxisLTP
-    highChartTemplateData.series[1].data = yaxisOI
-    highChartTemplateData.series[2].data = yaxisStockPrice */
-    highChartTemplateData = yaxisStockPrice + xaxisDate;
-    res.setHeader('Content-Type', 'application/json');
-    res.send(highChartTemplateData);
-  });
-  _fs2.default.createReadStream('OPTSTK_APOLLOHOSP_CE_26-Apr-2019_TO_07-Jun-2019.csv').pipe(parser);
+app.post('/options/optionPrice', function (req, res) {
+  console.log('started option price');
+  new _optionPrice2.default(req, res);
 });
 
 app.post('/nr', function (req, res, next) {

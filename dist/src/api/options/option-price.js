@@ -65,7 +65,11 @@ var OptionPrice = function OptionPrice(req, res) {
           var optionDetailsCounter = void 0,
               quoteDBRecord = [],
               strikePriceColl = [],
-              strikePriceDiff = void 0;
+              strikePriceDiff = void 0,
+              callOpenInterestChange = 0,
+              callOpenInterest = 0,
+              putOpenInterestChange = 0,
+              putOpenInterest = 0;
           for (var i = 0; i < PEDetails.length; i++) {
             strikePriceColl.push(parseFloat(PEDetails[i]['Strike Price'].replace(/,/g, '')));
             strikePriceColl.sort();
@@ -79,9 +83,15 @@ var OptionPrice = function OptionPrice(req, res) {
           strikePriceRange.push((atTheMoney + 2 * strikePriceDiff).toFixed(2));
           strikePriceRange.push((atTheMoney + 3 * strikePriceDiff).toFixed(2));
           var underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''));
-          console.log(underlyingPrice);
           for (optionDetailsCounter = 0; optionDetailsCounter < optionDetails.length; optionDetailsCounter++) {
             var optionDetail = optionDetails[optionDetailsCounter];
+            if (optionDetail['Optiontype'] == 'CE') {
+              callOpenInterestChange += parseFloat(optionDetail['Change in OI'].replace(/,/g, ''));
+              callOpenInterest += parseFloat(optionDetail['Open Int'].replace(/,/g, ''));
+            } else if (optionDetail['Optiontype'] == 'PE') {
+              putOpenInterestChange += parseFloat(optionDetail['Change in OI'].replace(/,/g, ''));
+              putOpenInterest += parseFloat(optionDetail['Open Int'].replace(/,/g, ''));
+            }
             if (strikePriceRange.includes(optionDetail['Strike Price'].replace(/,/g, ''))) {
               var price = void 0,
                   optionPrice = void 0;
@@ -107,7 +117,9 @@ var OptionPrice = function OptionPrice(req, res) {
           _optionDataTemplate2.default.title.text = symbol;
           _optionDataTemplate2.default.xAxis[0].categories = xaxisDate;
           _optionDataTemplate2.default.series[0].data = yaxisOptionData;
-          _optionDataTemplate2.default.series[0].yAxis = underlyingPrice;
+          _optionDataTemplate2.default.series[0].underlyingPrice = underlyingPrice;
+          _optionDataTemplate2.default.series[0].callOpenInterestChangePer = callOpenInterestChange / (callOpenInterest - callOpenInterestChange) * 100;
+          _optionDataTemplate2.default.series[0].putOpenInterestChangePer = putOpenInterestChange / (putOpenInterest - putOpenInterestChange) * 100;
           res.setHeader('Content-Type', 'application/json');
           res.send(_optionDataTemplate2.default);
         });

@@ -1,6 +1,23 @@
 'use strict';
 
 module.exports = {
+    series: [{
+        name: 'Option Price',
+        type: 'spline',
+        yAxis: 0,
+        underlyingPrice: 0,
+        callOpenInterestChangePer: 0,
+        putOpenInterestChangePer: 0
+    }, {
+        name: 'Open Interest',
+        type: 'spline',
+        yAxis: 1
+
+    }, {
+        name: 'Stock Price',
+        type: 'spline',
+        yAxis: 2
+    }],
     chart: {
         zoomType: 'xy'
     },
@@ -46,19 +63,5 @@ module.exports = {
                 // color: Highcharts.getOptions().colors[1]
             }
         }
-    }],
-    series: [{
-        name: 'Option Price',
-        type: 'spline',
-        yAxis: 0
-    }, {
-        name: 'Open Interest',
-        type: 'spline',
-        yAxis: 1
-
-    }, {
-        name: 'Stock Price',
-        type: 'spline',
-        yAxis: 2
     }]
 };

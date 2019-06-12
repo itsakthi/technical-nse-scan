@@ -43,7 +43,7 @@ export default class OptionPrice {
 					const PEDetailsJson = new HtmlTableToJson(PEDetailsResponse)
 					const PEDetails = PEDetailsJson.results[0]
 					const optionDetails = CEDetails.concat(PEDetails)
-          let optionDetailsCounter, quoteDBRecord = [], strikePriceColl = [], strikePriceDiff
+          let optionDetailsCounter, quoteDBRecord = [], strikePriceColl = [], strikePriceDiff, callOpenInterestChange = 0, callOpenInterest = 0, putOpenInterestChange = 0, putOpenInterest = 0
           for (let i = 0; i<PEDetails.length; i++) {
             strikePriceColl.push(parseFloat(PEDetails[i]['Strike Price'].replace(/,/g, '')))
             strikePriceColl.sort()
@@ -59,6 +59,13 @@ export default class OptionPrice {
           const underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''))
           for(optionDetailsCounter = 0; optionDetailsCounter < optionDetails.length; optionDetailsCounter++) {
             const optionDetail = optionDetails[optionDetailsCounter]
+            if (optionDetail['Optiontype'] == 'CE') {
+              callOpenInterestChange += parseFloat(optionDetail['Change in OI'].replace(/,/g, ''))
+              callOpenInterest += parseFloat(optionDetail['Open Int'].replace(/,/g, ''))
+            } else if (optionDetail['Optiontype'] == 'PE') {
+              putOpenInterestChange += parseFloat(optionDetail['Change in OI'].replace(/,/g, ''))
+              putOpenInterest += parseFloat(optionDetail['Open Int'].replace(/,/g, ''))
+            }
             if (strikePriceRange.includes(optionDetail['Strike Price'].replace(/,/g, ''))) {
               let price, optionPrice
               const StrikePrice = parseFloat(optionDetail['Strike Price'].replace(/,/g, ''))
@@ -85,11 +92,14 @@ export default class OptionPrice {
                 // iv: utility.impliedVolatility(optionPrice, underlyingPrice, StrikePrice, (diffDays - 1) / 365, 0.1, optionType === 'CE' ? 'call' : 'put')
              })
             }
+
           }
           optionDataTemp.title.text = symbol
           optionDataTemp.xAxis[0].categories = xaxisDate
           optionDataTemp.series[0].data = yaxisOptionData
-          optionDataTemp.series[0].yAxis = underlyingPrice
+          optionDataTemp.series[0].underlyingPrice = underlyingPrice
+          optionDataTemp.series[0].callOpenInterestChangePer = (callOpenInterestChange / (callOpenInterest - callOpenInterestChange)) * 100
+          optionDataTemp.series[0].putOpenInterestChangePer = (putOpenInterestChange / (putOpenInterest - putOpenInterestChange)) * 100
           res.setHeader('Content-Type', 'application/json')
           res.send(optionDataTemp)
         })

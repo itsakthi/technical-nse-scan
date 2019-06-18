@@ -28,7 +28,7 @@ export default class Star {
                             tempLow = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteLowPrice.replace(/,/g, ''))
                             currentOpenPrice = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
                         }
-                        currentDate = this.decrementDate(currentDate, 1)
+                        currentDate = utility.decrementDate(currentDate, 1)
                     }
                 }
                 let isOpenEqualsClose = utility.approximateEqual(currentOpenPrice, currentClosePrice);
@@ -42,14 +42,5 @@ export default class Star {
                 star
             })
         })
-    }
-    decrementDate (currentDate, decrementBy) {
-        let utility = new Utility()
-        const formattedCurrentDate = new Date(currentDate)
-        formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy)
-        let validDate = formattedCurrentDate.getFullYear() + '-'
-        validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1)
-        validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate())
-        return utility.formatDate(validDate)
     }
 }

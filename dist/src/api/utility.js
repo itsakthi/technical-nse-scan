@@ -106,6 +106,17 @@ var Utility = function () {
             }
             return validDate + '-' + date.split('-')[0];
         }
+    }, {
+        key: 'decrementDate',
+        value: function decrementDate(currentDate, decrementBy) {
+            var utility = new Utility();
+            var formattedCurrentDate = new Date(currentDate);
+            formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy);
+            var validDate = formattedCurrentDate.getFullYear() + '-';
+            validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1);
+            validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate());
+            return utility.formatDate(validDate);
+        }
     }]);
 
     return Utility;

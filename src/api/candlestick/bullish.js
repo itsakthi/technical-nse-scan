@@ -55,9 +55,9 @@ export default class Bullish {
                                     firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
                                 }
                             }
-                            currentDate = this.decrementDate(currentDate, 1)
+                            currentDate = utility.decrementDate(currentDate, 1)
                         }
-                        currentDate = this.decrementDate(currentDate, 2)
+                        currentDate = utility.decrementDate(currentDate, 3)
                     }
                     console.log(thirddaysClose+'-'+thirddaysHigh+'-'+thirddaysLow+'-'+thirddaysOpen)
                 }
@@ -131,14 +131,5 @@ export default class Bullish {
         let gains = averagegain({ values: data.close.slice(0, end), period: end - 1 });
         let losses = averageloss({ values: data.close.slice(0, end), period: end - 1 });
         return losses > gains;
-    }
-    decrementDate (currentDate, decrementBy) {
-        let utility = new Utility()
-        const formattedCurrentDate = new Date(currentDate)
-        formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy)
-        let validDate = formattedCurrentDate.getFullYear() + '-'
-        validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1)
-        validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate())
-        return utility.formatDate(validDate)
     }
 }

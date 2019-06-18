@@ -55,9 +55,9 @@ export default class Bearish {
                                     firstdaysOpen = parseFloat(result[index].quoteDBRecord[reqDateIndex].quoteOpenPrice.replace(/,/g, ''))
                                 }
                             }
-                            currentDate = this.decrementDate(currentDate, 1)
+                            currentDate = utility.decrementDate(currentDate, 1)
                         }
-                        currentDate = this.decrementDate(currentDate, 2)
+                        currentDate = utility.decrementDate(currentDate, 3)
                     }
                     console.log(thirddaysClose+'-'+thirddaysHigh+'-'+thirddaysLow+'-'+thirddaysOpen)
                 }
@@ -127,14 +127,5 @@ export default class Bearish {
                 darkCloud
             })
         })
-    }
-    decrementDate (currentDate, decrementBy) {
-        let utility = new Utility()
-        const formattedCurrentDate = new Date(currentDate)
-        formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy)
-        let validDate = formattedCurrentDate.getFullYear() + '-'
-        validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1)
-        validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate())
-        return utility.formatDate(validDate)
     }
 }

@@ -16,8 +16,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Bullish = function () {
     function Bullish(databaseConnection, collectionName, req, res) {
-        var _this = this;
-
         _classCallCheck(this, Bullish);
 
         var gapUp = [],
@@ -103,9 +101,9 @@ var Bullish = function () {
                                         firstdaysOpen = parseFloat(result[index].quoteDBRecord[_reqDateIndex].quoteOpenPrice.replace(/,/g, ''));
                                     }
                                 }
-                                currentDate = _this.decrementDate(currentDate, 1);
+                                currentDate = utility.decrementDate(currentDate, 1);
                             }
-                            currentDate = _this.decrementDate(currentDate, 2);
+                            currentDate = utility.decrementDate(currentDate, 3);
                         }
                         console.log(thirddaysClose + '-' + thirddaysHigh + '-' + thirddaysLow + '-' + thirddaysOpen);
                     })();
@@ -177,17 +175,6 @@ var Bullish = function () {
             var gains = averagegain({ values: data.close.slice(0, end), period: end - 1 });
             var losses = averageloss({ values: data.close.slice(0, end), period: end - 1 });
             return losses > gains;
-        }
-    }, {
-        key: 'decrementDate',
-        value: function decrementDate(currentDate, decrementBy) {
-            var utility = new _utility2.default();
-            var formattedCurrentDate = new Date(currentDate);
-            formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy);
-            var validDate = formattedCurrentDate.getFullYear() + '-';
-            validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1);
-            validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate());
-            return utility.formatDate(validDate);
         }
     }]);
 

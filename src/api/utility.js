@@ -80,4 +80,13 @@ export default class Utility {
         }
         return validDate + '-' + date.split('-')[0]
     }
+    decrementDate (currentDate, decrementBy) {
+        let utility = new Utility()
+        const formattedCurrentDate = new Date(currentDate)
+        formattedCurrentDate.setDate(formattedCurrentDate.getDate() - decrementBy)
+        let validDate = formattedCurrentDate.getFullYear() + '-'
+        validDate = validDate + (formattedCurrentDate.getMonth() < 10 ? '0' + (formattedCurrentDate.getMonth() + 1) : _formattedCurrentDate.getMonth() + 1)
+        validDate = validDate + '-' + (formattedCurrentDate.getDate() < 10 ? '0' + formattedCurrentDate.getDate() : formattedCurrentDate.getDate())
+        return utility.formatDate(validDate)
+    }
 }

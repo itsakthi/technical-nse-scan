@@ -121,7 +121,7 @@ export default class OptionPrice {
       })
       }
     })
-  }, 5000)
+  }, 3000)
   /*optionDataTemp.series[0].data = yaxisOptionData
   optionDataTemp.series[0].underlyingPrice = underlyingPrice
   optionDataTemp.series[0].callOpenInterestChangePer = (callOpenInterestChange / (callOpenInterest - callOpenInterestChange)) * 100

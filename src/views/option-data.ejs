@@ -1,47 +1,63 @@
-<div style="display:inline-grid;width:5%">
-  <% for(var i=0; i < (optionDataColl[0].length)/2; i++) {%>
-    <p><%= (optionDataColl[0][i].price).toFixed(2) %></p>
-  <% } %>
+<div>
+  <p><%= optionDataColl[0].underlyingPrice %></p>
+  <p><%= optionDataColl[0].date %></p>
+  <p><%= optionDataColl[0].callOpenInterestChangePer %></p>
+  <p><%= optionDataColl[0].putOpenInterestChangePer %></p>
+  <div style="display:inline-grid;width:5%">
+    <% for(var i=0; i < (optionDataColl[0].optionData.length)/2; i++) {%>
+      <p><%= (optionDataColl[0].optionData[i].price).toFixed(2) %></p>
+    <% } %>
+  </div>
+  <div style="display:inline-grid;width:5%">
+    <% for(var j=0; j < (optionDataColl[0].optionData.length)/2; j++) {%>
+      <p><%= optionDataColl[0].optionData[j].strikePrice %></p>
+    <% } %>
+  </div>
+  <div style="display:inline-grid;width:5%">
+    <% for(; i < optionDataColl[0].optionData.length; i++) {%>
+      <p><%= (optionDataColl[0].optionData[i].price).toFixed(2) %></p>
+    <% } %>
+  </div>
 </div>
-<div style="display:inline-grid;width:5%">
-  <% for(var j=0; j < (optionDataColl[0].length)/2; j++) {%>
-    <p><%= optionDataColl[0][j].strikePrice %></p>
-  <% } %>
+<div>
+    <p><%= optionDataColl[1].underlyingPrice %></p>
+    <p><%= optionDataColl[1].date %></p>
+    <p><%= optionDataColl[1].callOpenInterestChangePer %></p>
+    <p><%= optionDataColl[1].putOpenInterestChangePer %></p>
+    <div style="display:inline-grid;width:5%">
+    <% for(var i=0; i < (optionDataColl[1].optionData.length)/2; i++) {%>
+      <p><%= (optionDataColl[1].optionData[i].price).toFixed(2) %></p>
+    <% } %>
+  </div>
+  <div style="display:inline-grid;width:5%">
+    <% for(var j=0; j < (optionDataColl[1].optionData.length)/2; j++) {%>
+      <p><%= optionDataColl[1].optionData[j].strikePrice %></p>
+    <% } %>
+  </div>
+  <div style="display:inline-grid;width:5%">
+    <% for(; i < optionDataColl[1].optionData.length; i++) {%>
+      <p><%= (optionDataColl[1].optionData[i].price).toFixed(2) %></p>
+    <% } %>
+  </div>
 </div>
-<div style="display:inline-grid;width:5%">
-  <% for(; i < optionDataColl[0].length; i++) {%>
-    <p><%= (optionDataColl[0][i].price).toFixed(2) %></p>
-  <% } %>
-</div>
-<div style="display:inline-grid;width:5%"></div>
-<div style="display:inline-grid;width:5%">
-  <% for(var i=0; i < (optionDataColl[1].length)/2; i++) {%>
-    <p><%= (optionDataColl[1][i].price).toFixed(2) %></p>
-  <% } %>
-</div>
-<div style="display:inline-grid;width:5%">
-  <% for(var j=0; j < (optionDataColl[1].length)/2; j++) {%>
-    <p><%= optionDataColl[1][j].strikePrice %></p>
-  <% } %>
-</div>
-<div style="display:inline-grid;width:5%">
-  <% for(; i < optionDataColl[1].length; i++) {%>
-    <p><%= (optionDataColl[1][i].price).toFixed(2) %></p>
-  <% } %>
-</div>
-<div style="display:inline-grid;width:5%"></div>
-<div style="display:inline-grid;width:5%">
-  <% for(var i=0; i < (optionDataColl[2].length)/2; i++) {%>
-    <p><%= (optionDataColl[2][i].price).toFixed(2) %></p>
-  <% } %>
-</div>
-<div style="display:inline-grid;width:5%">
-  <% for(var j=0; j < (optionDataColl[2].length)/2; j++) {%>
-    <p><%= optionDataColl[2][j].strikePrice %></p>
-  <% } %>
-</div>
-<div style="display:inline-grid;width:5%">
-  <% for(; i < optionDataColl[2].length; i++) {%>
-    <p><%= (optionDataColl[2][i].price).toFixed(2) %></p>
-  <% } %>
+<div>
+  <p><%= optionDataColl[2].underlyingPrice %></p>
+  <p><%= optionDataColl[2].date %></p>
+  <p><%= optionDataColl[2].callOpenInterestChangePer %></p>
+  <p><%= optionDataColl[2].putOpenInterestChangePer %></p>
+  <div style="display:inline-grid;width:5%">
+    <% for(var i=0; i < (optionDataColl[2].optionData.length)/2; i++) {%>
+      <p><%= (optionDataColl[2].optionData[i].price).toFixed(2) %></p>
+    <% } %>
+  </div>
+  <div style="display:inline-grid;width:5%">
+    <% for(var j=0; j < (optionDataColl[2].optionData.length)/2; j++) {%>
+      <p><%= optionDataColl[2].optionData[j].strikePrice %></p>
+    <% } %>
+  </div>
+  <div style="display:inline-grid;width:5%">
+    <% for(; i < optionDataColl[2].optionData.length; i++) {%>
+      <p><%= (optionDataColl[2].optionData[i].price).toFixed(2) %></p>
+    <% } %>
+  </div>
 </div>

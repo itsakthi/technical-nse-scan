@@ -58,7 +58,7 @@ var OptionPrice = function OptionPrice(req, res) {
         console.log(reqDate);
         if (CEDetails.length <= 3) {
           reqDate = utility.decrementDate(reqDate, 1);
-          index > 0 && index--;
+          index--;
         } else {
           options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=27-06-2019&optionType=PE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=', _https2.default.get(options, function (http_res) {
             var PEDetailsResponse = "";
@@ -91,6 +91,7 @@ var OptionPrice = function OptionPrice(req, res) {
               strikePriceRange.push((atTheMoney + 2 * strikePriceDiff).toFixed(2));
               strikePriceRange.push((atTheMoney + 3 * strikePriceDiff).toFixed(2));
               var underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''));
+              var optionDataDate = void 0;
               optionData = [];
               for (optionDetailsCounter = 0; optionDetailsCounter < optionDetails.length; optionDetailsCounter++) {
                 var optionDetail = optionDetails[optionDetailsCounter];
@@ -113,8 +114,8 @@ var OptionPrice = function OptionPrice(req, res) {
                   var expiryDate = new Date(optionDetail['Expiry']);
                   var optionDate = new Date(optionDetail['Date']);
                   var diffDays = parseInt(expiryDate - optionDate) / (1000 * 60 * 60 * 24);
+                  optionDataDate = optionDetail['Date'];
                   optionData.push({
-                    date: optionDetail['Date'],
                     price: price,
                     optionType: optionType,
                     strikePrice: StrikePrice
@@ -122,7 +123,13 @@ var OptionPrice = function OptionPrice(req, res) {
                   });
                 }
               }
-              optionDataColl.push(optionData);
+              optionDataColl.push({
+                underlyingPrice: underlyingPrice,
+                date: optionDataDate,
+                callOpenInterestChangePer: callOpenInterestChange / (callOpenInterest - callOpenInterestChange) * 100,
+                putOpenInterestChangePer: putOpenInterestChange / (putOpenInterest - putOpenInterestChange) * 100,
+                optionData: optionData
+              });
             });
           });
           reqDate = utility.decrementDate(reqDate, 1);

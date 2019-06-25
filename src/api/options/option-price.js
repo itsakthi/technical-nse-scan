@@ -17,7 +17,7 @@ export default class OptionPrice {
   const optionPriceInterval = setInterval(async () => {  
     let options = {
       'host': 'www.nseindia.com',
-      'path': '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=27-06-2019&optionType=CE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
+      'path': '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=25-07-2019&optionType=CE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
       'method': 'GET',
       'headers': {
           'Accept': '*/*',
@@ -39,7 +39,7 @@ export default class OptionPrice {
           reqDate = utility.decrementDate(reqDate, 1)
           index--
         } else {
-          options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=27-06-2019&optionType=PE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
+          options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=25-07-2019&optionType=PE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
           https.get(options, function (http_res) {
             let PEDetailsResponse = ""
             http_res.on("data", function (chunk) {
@@ -64,6 +64,7 @@ export default class OptionPrice {
               strikePriceRange.push((atTheMoney + 2 * strikePriceDiff).toFixed(2))
               strikePriceRange.push((atTheMoney + 3 * strikePriceDiff).toFixed(2))
               const underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''))
+              let optionDataDate
               optionData = []
               for(optionDetailsCounter = 0; optionDetailsCounter < optionDetails.length; optionDetailsCounter++) {
                 const optionDetail = optionDetails[optionDetailsCounter]
@@ -91,8 +92,8 @@ export default class OptionPrice {
                   const expiryDate = new Date(optionDetail['Expiry'])
                   const optionDate = new Date(optionDetail['Date'])
                   const diffDays = parseInt(expiryDate - optionDate) / (1000 * 60 * 60 * 24)
+                  optionDataDate = optionDetail['Date']
                   optionData.push({
-                    date: optionDetail['Date'],
                     price,
                     optionType: optionType,
                     strikePrice: StrikePrice
@@ -100,7 +101,13 @@ export default class OptionPrice {
                   })
                 }
               }
-              optionDataColl.push(optionData)
+              optionDataColl.push({
+                underlyingPrice,
+                date: optionDataDate,
+                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - callOpenInterestChange)) * 100,
+                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - putOpenInterestChange)) * 100,
+                optionData
+              })
             })
           })
           reqDate = utility.decrementDate(reqDate, 1)
@@ -111,7 +118,7 @@ export default class OptionPrice {
         clearInterval(optionPriceInterval)
         res.render('../src/views/option-data.ejs', {
           optionDataColl
-        })
+      })
       }
     })
   }, 5000)

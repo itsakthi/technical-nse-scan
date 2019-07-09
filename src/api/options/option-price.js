@@ -104,8 +104,8 @@ export default class OptionPrice {
               optionDataColl.push({
                 underlyingPrice,
                 date: optionDataDate,
-                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - abs(callOpenInterestChange))) * 100,
-                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - abs(putOpenInterestChange))) * 100,
+                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - Math.abs(callOpenInterestChange))) * 100,
+                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - Math.abs(putOpenInterestChange))) * 100,
                 optionData
               })
             })

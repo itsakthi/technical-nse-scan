@@ -36,6 +36,7 @@ export default class OptionPrice {
         const CEDetails = CEDetailsJson.results[0]
         console.log(reqDate)
         if (CEDetails.length <= 3) {
+console.log("no ce details")
           reqDate = utility.decrementDate(reqDate, 1)
           index--
         } else {

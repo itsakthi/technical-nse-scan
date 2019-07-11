@@ -58,12 +58,14 @@ console.log("no ce details")
               }
               strikePriceDiff = Math.abs(strikePriceColl[0] - strikePriceColl[1])
               const atTheMoney = Math.floor(optionDetails[0]['Underlying Value'].replace(/,/g, '') / strikePriceDiff) * strikePriceDiff
+              strikePriceRange.push((atTheMoney - 3 * strikePriceDiff).toFixed(2))
               strikePriceRange.push((atTheMoney - 2 * strikePriceDiff).toFixed(2))
               strikePriceRange.push((atTheMoney - 1 * strikePriceDiff).toFixed(2))
               strikePriceRange.push((atTheMoney).toFixed(2))
               strikePriceRange.push((atTheMoney + 1 * strikePriceDiff).toFixed(2))
               strikePriceRange.push((atTheMoney + 2 * strikePriceDiff).toFixed(2))
               strikePriceRange.push((atTheMoney + 3 * strikePriceDiff).toFixed(2))
+              strikePriceRange.push((atTheMoney + 4 * strikePriceDiff).toFixed(2))
               const underlyingPrice = parseFloat(optionDetails[0]['Underlying Value'].replace(/,/g, ''))
               let optionDataDate
               optionData = []

@@ -36,7 +36,6 @@ export default class OptionPrice {
         const CEDetails = CEDetailsJson.results[0]
         console.log(reqDate)
         if (CEDetails.length <= 3) {
-console.log("no ce details")
           reqDate = utility.decrementDate(reqDate, 1)
           index--
         } else {
@@ -85,7 +84,11 @@ console.log("no ce details")
                   else
                     optionPrice = parseFloat(optionDetail['Close'])
                   const intrinsicValue = underlyingPrice - StrikePrice
-                  price = optionPrice - intrinsicValue
+                  price = optionPrice
+                  if (optionType === 'CE')
+                      price = optionPrice - intrinsicValue
+                  else if (optionType === 'PE')
+                      price = optionPrice + intrinsicValue
                   const expiryDate = new Date(optionDetail['Expiry'])
                   const optionDate = new Date(optionDetail['Date'])
                   const diffDays = parseInt(expiryDate - optionDate) / (1000 * 60 * 60 * 24)
@@ -101,8 +104,8 @@ console.log("no ce details")
               optionDataColl.push({
                 underlyingPrice,
                 date: optionDataDate,
-                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - Math.abs(callOpenInterestChange))) * 100,
-                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - Math.abs(putOpenInterestChange))) * 100,
+                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - abs(callOpenInterestChange))) * 100,
+                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - abs(putOpenInterestChange))) * 100,
                 optionData
               })
             })

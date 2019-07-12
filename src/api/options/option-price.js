@@ -85,9 +85,9 @@ export default class OptionPrice {
                     optionPrice = parseFloat(optionDetail['Close'])
                   const intrinsicValue = underlyingPrice - StrikePrice
                   price = optionPrice
-                  if (optionType === 'CE' && intrinsicValue >= 0)
+                  if (intrinsicValue >= 0)
                       price = optionPrice - intrinsicValue
-                  else if (optionType === 'PE' && intrinsicValue <= 0)
+                  else if (intrinsicValue < 0)
                       price = optionPrice + intrinsicValue
                   const expiryDate = new Date(optionDetail['Expiry'])
                   const optionDate = new Date(optionDetail['Date'])

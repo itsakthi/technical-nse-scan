@@ -36,6 +36,7 @@ export default class OptionPrice {
         const CEDetails = CEDetailsJson.results[0]
         console.log(reqDate)
         if (CEDetails.length <= 3) {
+console.log("no ce details")
           reqDate = utility.decrementDate(reqDate, 1)
           index--
         } else {
@@ -104,8 +105,8 @@ export default class OptionPrice {
               optionDataColl.push({
                 underlyingPrice,
                 date: optionDataDate,
-                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - abs(callOpenInterestChange))) * 100,
-                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - abs(putOpenInterestChange))) * 100,
+                callOpenInterestChangePer: (callOpenInterestChange / (callOpenInterest - Math.abs(callOpenInterestChange))) * 100,
+                putOpenInterestChangePer: (putOpenInterestChange / (putOpenInterest - Math.abs(putOpenInterestChange))) * 100,
                 optionData
               })
             })

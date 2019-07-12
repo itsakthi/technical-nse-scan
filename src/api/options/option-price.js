@@ -85,11 +85,7 @@ console.log("no ce details")
                   else
                     optionPrice = parseFloat(optionDetail['Close'])
                   const intrinsicValue = underlyingPrice - StrikePrice
-                  price = optionPrice
-                  if (intrinsicValue >= 0)
-                      price = optionPrice - intrinsicValue
-                  else if (intrinsicValue < 0)
-                      price = optionPrice + intrinsicValue
+                  price = optionPrice - intrinsicValue
                   const expiryDate = new Date(optionDetail['Expiry'])
                   const optionDate = new Date(optionDetail['Date'])
                   const diffDays = parseInt(expiryDate - optionDate) / (1000 * 60 * 60 * 24)

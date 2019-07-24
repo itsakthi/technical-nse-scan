@@ -17,7 +17,7 @@ export default class OptionPrice {
   const optionPriceInterval = setInterval(async () => {  
     let options = {
       'host': 'www.nseindia.com',
-      'path': '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=25-07-2019&optionType=CE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
+      'path': '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=29-08-2019&optionType=CE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
       'method': 'GET',
       'headers': {
           'Accept': '*/*',
@@ -39,7 +39,7 @@ export default class OptionPrice {
           reqDate = utility.decrementDate(reqDate, 1)
           index--
         } else {
-          options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=25-07-2019&optionType=PE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
+          options.path = '/products/dynaContent/common/productsSymbolMapping.jsp?instrumentType=OPTSTK&symbol=' + symbol + '&expiryDate=29-08-2019&optionType=PE&strikePrice=&dateRange=&fromDate=' + reqDate + '&toDate=' + reqDate + '&segmentLink=9&symbolCount=',
           https.get(options, function (http_res) {
             let PEDetailsResponse = ""
             http_res.on("data", function (chunk) {

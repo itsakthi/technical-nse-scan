@@ -39,7 +39,6 @@ export default class Utility {
         return (isOpenEqualsClose && isHighEqualsOpen == isLowEqualsClose)
     }
     formatDate(date) {
-console.log(date)
         let validDate = date.split('-')[2] + '-'
         switch(date.split('-')[1]) {
             case '01':

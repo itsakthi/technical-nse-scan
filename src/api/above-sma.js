@@ -16,6 +16,7 @@ export default class AboveSMA {
             const prevLowPrice = result[index].stockPrices[1].low
             const prevClosePrice = result[index].stockPrices[1].close
             
+
             if((currentOpenPrice > currentSMA) && (currentHighPrice > currentSMA) && (currentLowPrice > currentSMA) && (currentClosePrice > currentSMA)) {
                 if((prevOpenPrice > prevSMA) && (prevHighPrice > prevSMA) && (prevLowPrice > prevSMA) && (prevClosePrice > prevSMA)) {
                 twoDaysOnStockList.push(result[index].stockCode)
